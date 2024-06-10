@@ -1,5 +1,8 @@
 # OmniParse
-API to Convert anything to markdown
+<div align="center">
+  <img src="./docs/assets/hero_image.jpeg" width="300"/>
+    <p>1 API to convert anything to markdown<p>
+</div>
 
 > [!IMPORTANT]
 >
@@ -9,30 +12,12 @@ API to Convert anything to markdown
 
 ✅ Supports 15+ file types \
 ✅ Convert Documents, Multimedia, Web pages to high-quality structured markdown \
-✅ Table Extraction, Image Extraction/Captioning, Audio Transcription, Web page Crawling \
+✅ Table Extraction, Image Extraction/Captioning, Audio/Video Transcription, Web page Crawling \
 ✅ Easily Deployable using Docker and Skypilot \
 ✅ CPU/GPU compatible \
 ✅ Batch processing for handling multiple files at once \
 ✅ Comprehensive logging and error handling for robust performance \
 
-## Supported File Types
-
-| Type       | Supported Extensions                    |
-|------------|-----------------------------------------|
-| Documents  | .doc, .docx, .epub, .odt, .pdf, .ppt, .pptx |
-
-<!-- 
-| Type      | Supported Extensions                                |
-|-----------|-----------------------------------------------------|
-| Plaintext | .eml, .html, .md, .msg, .rst, .rtf, .txt, .xml      |
-| Documents | .doc, .docx, .epub, .odt, .pdf, .ppt, .pptx         |
-| Table     | .csv, .xlsx                                         |
-| Images    | .png, .jpg, .jpeg, .tiff, .bmp, .heic               |
-| Video     | .mp4, .mkv, .avi, .mov                              |
-| Audio     | .mp3, .wav, .aac                                    |
-| Web       | dynamic webpages, http://<anything>.com             |
-| Crawl     | dynamic webpages, http://<anything>.com            |
--->
 
 ## Installation
 
@@ -91,6 +76,24 @@ document = parser.load_data('path/to/document.pdf')
 parser.save_to_markdown(document)
 ```
 
+## Supported File Types
+
+| Type       | Supported Extensions                    |
+|------------|-----------------------------------------|
+| Documents  | .doc, .docx, .epub, .odt, .pdf, .ppt, .pptx |
+
+<!-- 
+| Type      | Supported Extensions                                |
+|-----------|-----------------------------------------------------|
+| Plaintext | .eml, .html, .md, .msg, .rst, .rtf, .txt, .xml      |
+| Documents | .doc, .docx, .epub, .odt, .pdf, .ppt, .pptx         |
+| Table     | .csv, .xlsx                                         |
+| Images    | .png, .jpg, .jpeg, .tiff, .bmp, .heic               |
+| Video     | .mp4, .mkv, .avi, .mov                              |
+| Audio     | .mp3, .wav, .aac                                    |
+| Web       | dynamic webpages, http://<anything>.com             |
+| Crawl     | dynamic webpages, http://<anything>.com            |
+-->
 
 
 ## License
