@@ -7,13 +7,13 @@ API to Convert anything to markdown
 
 ## Features
 
-✅ Supports 15+ file types
-✅ Convert Documents, Multimedia, Web pages to high-quality structured markdown
-✅ Table Extraction, Image Extraction/Captioning, Audio Transcription, Web page Crawling
-✅ Easily Deployable using Docker and Skypilot
-✅ CPU/GPU compatible
-✅ Batch processing for handling multiple files at once
-✅ Comprehensive logging and error handling for robust performance
+✅ Supports 15+ file types \
+✅ Convert Documents, Multimedia, Web pages to high-quality structured markdown \
+✅ Table Extraction, Image Extraction/Captioning, Audio Transcription, Web page Crawling \
+✅ Easily Deployable using Docker and Skypilot \
+✅ CPU/GPU compatible \
+✅ Batch processing for handling multiple files at once \
+✅ Comprehensive logging and error handling for robust performance \
 
 ## Supported File Types
 
@@ -99,13 +99,7 @@ OmniParse is licensed under the Apache License. See `LICENSE` for more informati
 
 ## Acknowledgement
 
-Big thanks to VikParuchuri for creating awesome open-source OCR models which have been extensively used in this project:
-
-- [Surya-OCR](https://github.com/VikParuchuri/surya) - The main OCR
-- [Texify](https://github.com/VikParuchuri/texify)
-- Pypdfium2/pdfium
-- DocLayNet from IBM
-- ByT5 from Google
+[Surya-OCR](https://github.com/VikParuchuri/surya),[Texify](https://github.com/VikParuchuri/texify) - Big thanks to VikParuchuri for creating awesome open-source OCR models which have been extensively used in this project
 
 ## Contact
 
