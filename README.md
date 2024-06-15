@@ -1,12 +1,11 @@
 # OmniParse
-<div align="center">
-  <img src="./docs/assets/hero_image.jpeg" width="300"/>
-    <p>1 API to convert anything to markdown<p>
-</div>
+
+![Twitter header - 1](https://github.com/adithya-s-k/omniparse/assets/27956426/7210da8d-04ef-4b19-b14d-4c16aee50a32)
+
 
 > [!IMPORTANT]
 >
-> OmniParse is a comprehensive parsing tool designed to convert any document, media, or website into markdown. Whether you're dealing with documents, tables, images, videos, audio files, or web pages, OmniParse ensures your data is parsed and cleaned to a high standard before it is passed to any downstream LLM use case, such as advanced RAG.
+> OmniParse is a comprehensive parsing tool designed to convert any unstrcutred document, media, or website into strcutured markdown. Whether you're dealing with documents, tables, images, videos, audio files, or web pages, OmniParse ensures your data is parsed and cleaned to a high standard before it is passed to any downstream LLM use case, such as advanced RAG.
 
 ## Features
 
@@ -18,6 +17,19 @@
 ✅ Batch processing for handling multiple files at once \
 ✅ Comprehensive logging and error handling for robust performance \
 
+
+## Supported Types
+
+| Type      | Supported Extensions                                |
+|-----------|-----------------------------------------------------|
+| Plaintext | .eml, .html, .md, .msg, .rst, .rtf, .txt, .xml      |
+| Documents | .doc, .docx, .epub, .odt, .pdf, .ppt, .pptx         |
+| Table     | .csv, .xlsx                                         |
+| Images    | .png, .jpg, .jpeg, .tiff, .bmp, .heic               |
+| Video     | .mp4, .mkv, .avi, .mov                              |
+| Audio     | .mp3, .wav, .aac                                    |
+| Web       | dynamic webpages, http://<anything>.com             |
+| Crawl     | dynamic webpages, http://<anything>.com             |
 
 ## Installation
 
@@ -76,24 +88,6 @@ document = parser.load_data('path/to/document.pdf')
 parser.save_to_markdown(document)
 ```
 
-## Supported File Types
-
-| Type       | Supported Extensions                    |
-|------------|-----------------------------------------|
-| Documents  | .doc, .docx, .epub, .odt, .pdf, .ppt, .pptx |
-
-<!-- 
-| Type      | Supported Extensions                                |
-|-----------|-----------------------------------------------------|
-| Plaintext | .eml, .html, .md, .msg, .rst, .rtf, .txt, .xml      |
-| Documents | .doc, .docx, .epub, .odt, .pdf, .ppt, .pptx         |
-| Table     | .csv, .xlsx                                         |
-| Images    | .png, .jpg, .jpeg, .tiff, .bmp, .heic               |
-| Video     | .mp4, .mkv, .avi, .mov                              |
-| Audio     | .mp3, .wav, .aac                                    |
-| Web       | dynamic webpages, http://<anything>.com             |
-| Crawl     | dynamic webpages, http://<anything>.com            |
--->
 
 
 ## License
