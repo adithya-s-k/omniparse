@@ -1,10 +1,11 @@
 # Table of contents
 
 * [OmniPrase](README.md)
-  * [Installation](omniprase/installation.md)
-  * [Quick Start](omniprase/quick-start.md)
-  * [Deployment](omniprase/deployment.md)
-  * [Integration](omniprase/integration.md)
+* [Quick Start](quick-start.md)
+* [Installation](installation.md)
+* [Deployment](deployment.md)
+* [Integration](integration.md)
+* [API](api.md)
 
 ## Examples
 
