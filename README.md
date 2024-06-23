@@ -1,6 +1,6 @@
 # OmniParse
 
-![Twitter header - 1](https://github.com/adithya-s-k/omniparse/assets/27956426/7210da8d-04ef-4b19-b14d-4c16aee50a32)
+![Omniprase](https://github.com/adithya-s-k/omniparse/assets/27956426/7210da8d-04ef-4b19-b14d-4c16aee50a32)
 
 
 > [!IMPORTANT]
