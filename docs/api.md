@@ -6,157 +6,126 @@ description: >-
 
 # API
 
-***
+**Parse Any Document**
 
-## **Document Parsing Endpoints**
+Endpoint: `/parse_document` Method: POST
 
-These endpoints are used to parse various document formats, such as PDF, PPT, DOC, and DOCX.
+Parses PDF, PowerPoint, or Word documents.
 
-### **Parse PDF**
+Curl command:
 
-* **Endpoint:** `/parse_document/pdf`
-* **Method:** `POST`
-* **Description:** Parses a PDF file and extracts text, images, and metadata.
-* **Parameters:**
-  * `file`: PDF file to be uploaded.
-* **Response:** JSON containing parsed markdown text, metadata, and images.
-
-**Curl Request:**
-
-```sh
-curl -X POST "http://localhost:8000/parse_document/pdf" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/file.pdf"
+```
+curl -X POST -F "file=@/path/to/document" http://localhost:8000/parse_document
 ```
 
-### **Parse PPT**
+**Parse PDF**
 
-* **Endpoint:** `/parse_document/ppt`
-* **Method:** `POST`
-* **Description:** Parses a PPT file by converting it to PDF, then extracts text, images, and metadata.
-* **Parameters:**
-  * `file`: PPT file to be uploaded.
-* **Response:** JSON containing parsed markdown text, metadata, and images.
+Endpoint: `/parse_document/pdf` Method: POST
 
-**Curl Request:**
+Parses PDF documents.
 
-```sh
-curl -X POST "http://localhost:8000/parse_document/ppt" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/file.ppt"
+Curl command:
+
+```
+curl -X POST -F "file=@/path/to/document.pdf" http://localhost:8000/parse_document/pdf
 ```
 
-### **Parse DOC**
+**Parse PowerPoint**
 
-* **Endpoint:** `/parse_document/docs`
-* **Method:** `POST`
-* **Description:** Parses a DOC or DOCX file by converting it to PDF, then extracts text, images, and metadata.
-* **Parameters:**
-  * `file`: DOC or DOCX file to be uploaded.
-* **Response:** JSON containing parsed markdown text, metadata, and images.
+Endpoint: `/parse_document/ppt` Method: POST
 
-**Curl Request:**
+Parses PowerPoint presentations.
 
-```sh
-curl -X POST "http://localhost:8000/parse_document/docs" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/file.docx"
+Curl command:
+
+```
+curl -X POST -F "file=@/path/to/presentation.ppt" http://localhost:8000/parse_document/ppt
 ```
 
-### **Parse Document (Generic)**
+**Parse Word Document**
 
-* **Endpoint:** `/parse_document`
-* **Method:** `POST`
-* **Description:** Parses a document file (PDF, PPT, DOC, DOCX) by converting it to PDF if necessary, then extracts text, images, and metadata.
-* **Parameters:**
-  * `file`: Document file to be uploaded.
-* **Response:** JSON containing parsed markdown text, metadata, and images.
+Endpoint: `/parse_document/docs` Method: POST
 
-**Curl Request:**
+Parses Word documents.
 
-```sh
-curl -X POST "http://localhost:8000/parse_document" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/file.docx"
+Curl command:
+
+```
+curl -X POST -F "file=@/path/to/document.docx" http://localhost:8000/parse_document/docs
 ```
 
-***
+#### Media Parsing
 
-## **Media Parsing Endpoints**
+**Parse Image**
 
-These endpoints are used to parse various media formats, such as images, videos, and audio files.
+Endpoint: `/parse_media/image` Method: POST
 
-### **Parse Image**
+Parses image files (PNG, JPEG, JPG, TIFF, WEBP).
 
-* **Endpoint:** `/parse_media/image`
-* **Method:** `POST`
-* **Description:** Parses an image file by converting it to PDF, then extracts text, images, and metadata.
-* **Parameters:**
-  * `file`: Image file to be uploaded.
-* **Response:** JSON containing parsed markdown text, metadata, and images.
+Curl command:
 
-**Curl Request:**
-
-```sh
-curl -X POST "http://localhost:8000/parse_media/image" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/image.jpg"
+```
+curl -X POST -F "file=@/path/to/image.jpg" http://localhost:8000/parse_media/image
 ```
 
-### **Parse Video**
+**Process Image**
 
-* **Endpoint:** `/parse_media/video`
-* **Method:** `POST`
-* **Description:** Parses a video file by extracting audio and transcribing it.
-* **Parameters:**
-  * `file`: Video file to be uploaded.
-* **Response:** JSON containing the transcribed text.
+Endpoint: `/parse_media/process_image` Method: POST
 
-**Curl Request:**
+Processes an image with a specific task.
 
-```sh
-curl -X POST "http://localhost:8000/parse_media/video" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/video.mp4"
+Possible task inputs: `OCR | OCR with Region | Caption | Detailed Caption | More Detailed Caption | Object Detection | Dense Region Caption | Region Proposal`
+
+Curl command:
+
+```
+curl -X POST -F "image=@/path/to/image.jpg" -F "task=Caption" -F "prompt=Optional prompt" http://localhost:8000/parse_media/process_image
 ```
 
-### **Parse Audio**
+Arguments:
 
-* **Endpoint:** `/parse_media/audio`
-* **Method:** `POST`
-* **Description:** Parses an audio file by transcribing it.
-* **Parameters:**
-  * `file`: Audio file to be uploaded.
-* **Response:** JSON containing the transcribed text.
+* `image`: The image file
+* `task`: The processing task (e.g., Caption, Object Detection)
+* `prompt`: Optional prompt for certain tasks
 
-**Curl Request:**
+**Parse Video**
 
-```sh
-curl -X POST "http://localhost:8000/parse_media/audio" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/audio.mp3"
+Endpoint: `/parse_media/video` Method: POST
+
+Parses video files (MP4, AVI, MOV, MKV).
+
+Curl command:
+
+```
+curl -X POST -F "file=@/path/to/video.mp4" http://localhost:8000/parse_media/video
 ```
 
-### **Parse Media (Generic)**
+**Parse Audio**
 
-* **Endpoint:** `/parse_media`
-* **Method:** `POST`
-* **Description:** Parses a media file (image, video, or audio) by converting to PDF if necessary or transcribing if audio.
-* **Parameters:**
-  * `file`: Media file to be uploaded.
-* **Response:** JSON containing parsed markdown text or transcribed text, metadata, and images.
+Endpoint: `/parse_media/audio` Method: POST
 
-**Curl Request:**
+Parses audio files (MP3, WAV, FLAC).
 
-```sh
-curl -X POST "http://localhost:8000/parse_media" -H "accept: application/json" -H "Content-Type: multipart/form-data" -F "file=@path/to/your/file.mp4"
+Curl command:
+
+```
+curl -X POST -F "file=@/path/to/audio.mp3" http://localhost:8000/parse_media/audio
 ```
 
-***
+#### Website Parsing
 
-## **Website Parsing Endpoint**
+**Parse Website**
 
-This endpoint is used to parse the content of a website.
+Endpoint: `/parse_website` Method: POST
 
-### **Parse Website**
+Parses a website given its URL.
 
-* **Endpoint:** `/parse_website`
-* **Method:** `POST`
-* **Description:** Parses a website URL to extract text content and other relevant data.
-* **Parameters:**
-  * `url`: The URL of the website to be parsed.
-* **Response:** JSON containing the parsed website content.
+Curl command:
 
-**Curl Request:**
-
-```sh
-curl -X POST "http://localhost:8000/parse_website" -H "accept: application/json" -H "Content-Type: application/json" -d '{"url": "https://www.example.com"}'
+```
+curl -X POST -H "Content-Type: application/json" -d '{"url": "https://example.com"}' http://localhost:8000/parse_website
 ```
 
-***
+Arguments:
+
+* `url`: The URL of the website to parse
