@@ -10,7 +10,7 @@
 
 > [!IMPORTANT]
 >
->OmniParse is a platform that ingests/parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applcaitons. Whether working with documents, tables, images, videos, audio files, or web pages, OmniParse ensures your data is clean and ready for GenAI applications, like RAG fineutning etc.
+>OmniParse is a platform that ingests/parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applcaitons. Whether working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured and ready for AI applications, such as RAG , fine-tuning and more.
 
 
 
@@ -28,16 +28,6 @@
 
 ### Problem Statement
 It's challenging to process data as it comes in different shapes and sizes. OmniParse aims to be an ingestion/parsing platform where you can ingest any type of data, such as documents, images, audio, video, and web content, and get the most structured and actionable output that is GenAI (LLM) friendly.
-
-## Supported Types
-
-| Type      | Supported Extensions                                |
-|-----------|-----------------------------------------------------|
-| Documents | .doc, .docx, .odt, .pdf, .ppt, .pptx                |
-| Images    | .png, .jpg, .jpeg, .tiff, .bmp, .heic               |
-| Video     | .mp4, .mkv, .avi, .mov                              |
-| Audio     | .mp3, .wav, .aac                                    |
-| Web       | dynamic webpages, http://<anything>.com             |
 
 ## Installation
 > Note: The server only works on Linux-based systems. This is due to certain dependencies and system-specific configurations that are not compatible with Windows or macOS.
@@ -113,14 +103,22 @@ Arguments:
 - `--host`: Host IP address (default: 0.0.0.0)
 - `--port`: Port number (default: 8000)
 
+## Supported Data Types
+
+| Type      | Supported Extensions                                |
+|-----------|-----------------------------------------------------|
+| Documents | .doc, .docx, .odt, .pdf, .ppt, .pptx                |
+| Images    | .png, .jpg, .jpeg, .tiff, .bmp, .heic               |
+| Video     | .mp4, .mkv, .avi, .mov                              |
+| Audio     | .mp3, .wav, .aac                                    |
+| Web       | dynamic webpages, http://<anything>.com             |
 
 
 <details>
 <summary><h2>API Endpoints</h></summary>
 
-> [!IMPORTANT]
->
 > Client library compatible with Langchain, llamaindex, and haystack integrations coming soon.
+
 - [API Endpoints](#api-endpoints)
   - [Document Parsing](#document-parsing)
     - [Parse Any Document](#parse-any-document)
