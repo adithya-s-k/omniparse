@@ -286,7 +286,17 @@ Arguments:
 OmniParse is licensed under the GPL-3.0 license. See `LICENSE` for more information.
 
 ## Acknowledgements
-This project is built on top of the remarkable [Marker](https://github.com/VikParuchuri/marker) project created by [Vik Paruchuri](https://twitter.com/VikParuchuri). We express our gratitude for the inspiration and foundation provided by this project. Special thanks to [Surya-OCR](https://github.com/VikParuchuri/surya) and [Texify](https://github.com/VikParuchuri/texify) for the OCR models extensively used in this project, and to [Crawl4AI](https://github.com/unclecode/crawl4ai) for their contributions.
+
+This project builds upon the remarkable [Marker](https://github.com/VikParuchuri/marker) project created by [Vik Paruchuri](https://twitter.com/VikParuchuri). We express our gratitude for the inspiration and foundation provided by this project. Special thanks to [Surya-OCR](https://github.com/VikParuchuri/surya) and [Texify](https://github.com/VikParuchuri/texify) for the OCR models extensively used in this project, and to [Crawl4AI](https://github.com/unclecode/crawl4ai) for their contributions.
+
+Models being used:
+- Surya OCR, Detect, Layout, Order, and Texify
+- Florence-2 base
+- Whisper Small
+
+Thank you to the authors for their contributions to these models.
+
+---
 
 ## Contact
 <p align="center">
