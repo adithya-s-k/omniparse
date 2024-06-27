@@ -40,7 +40,7 @@ It's challenging to process data as it comes in different shapes and sizes. Omni
 | Web       | dynamic webpages, http://<anything>.com             |
 
 ## Installation
-
+> Note: The server only works on Linux-based systems. This is due to certain dependencies and system-specific configurations that are not compatible with Windows or macOS.
 To install OmniParse, you can use `pip`:
 
 ```bash
@@ -63,6 +63,32 @@ poetry install
 pip install -e .
 ```
 
+### 🛳️ Docker
+
+To use OmniParse with Docker, execute the following commands:
+
+1. Pull the OmniParse API Docker image from Docker Hub:
+2. Run the Docker container, exposing port 8000:
+ 👉🏼[Docker Image](https://hub.docker.com/r/savatar101/omniparse)
+```bash
+docker pull savatar101/omniparse:0.1
+# if you are running on a gpu 
+docker run --gpus all -p 8000:8000 savatar101/omniparse:0.1
+# else
+docker run -p 8000:8000 savatar101/omniparse:0.1
+```
+
+Alternatively, if you prefer to build the Docker image locally:
+Then, run the Docker container as follows:
+
+```bash
+docker build -t omniparse .
+# if you are running on a gpu
+docker run --gpus all -p 8000:8000 omniparse
+# else
+docker run -p 8000:8000 omniparse
+
+```
 ## Usage
 
 Run the Server:
@@ -74,11 +100,6 @@ python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 - `--documents`: Load in all the models that help you parse and ingest documents (Surya OCR series of models and Florence-2).
 - `--media`: Load in Whisper model to transcribe audio and video files.
 - `--web`: Set up selenium crawler.
-
-
-## Setup and Installation
-
-(Include instructions for setting up the environment and installing dependencies here)
 
 ## Running the Server
 
@@ -263,8 +284,7 @@ Arguments:
 
 
 ## License
-
-OmniParse is licensed under the Apache License. See `LICENSE` for more information.
+OmniParse is licensed under the GPL-3.0 license. See `LICENSE` for more information.
 
 ## Acknowledgements
 This project is built on top of the remarkable [Marker](https://github.com/VikParuchuri/marker) project created by [Vik Paruchuri](https://twitter.com/VikParuchuri). We express our gratitude for the inspiration and foundation provided by this project. Special thanks to [Surya-OCR](https://github.com/VikParuchuri/surya) and [Texify](https://github.com/VikParuchuri/texify) for the OCR models extensively used in this project, and to [Crawl4AI](https://github.com/unclecode/crawl4ai) for their contributions.
