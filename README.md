@@ -12,6 +12,8 @@
 >
 >OmniParse is a platform that ingests/parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applcaitons. Whether working with documents, tables, images, videos, audio files, or web pages, OmniParse ensures your data is clean and ready for GenAI applications, like RAG fineutning etc.
 
+
+
 ## Try it out
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adithya-s-k/omniparse/blob/main/examples/OmniParse_GoogleColab.ipynb)
 
@@ -73,24 +75,6 @@ python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 - `--media`: Load in Whisper model to transcribe audio and video files.
 - `--web`: Set up selenium crawler.
 
-> [!IMPORTANT]
->
-> Client library compatible with Langchain, llamaindex, and haystack integrations coming soon.
-
-Here's a detailed README file documentation for the API:
-
-# Document, Media, and Website Parsing API
-
-This API provides endpoints for parsing various types of documents, media files, and websites. It supports PDF, PowerPoint, Word documents, images, videos, audio files, and web pages.
-
-## Table of Contents
-
-1. [Setup and Installation](#setup-and-installation)
-2. [Running the Server](#running-the-server)
-3. [API Endpoints](#api-endpoints)
-   - [Document Parsing](#document-parsing)
-   - [Media Parsing](#media-parsing)
-   - [Website Parsing](#website-parsing)
 
 ## Setup and Installation
 
@@ -108,8 +92,28 @@ Arguments:
 - `--host`: Host IP address (default: 0.0.0.0)
 - `--port`: Port number (default: 8000)
 
+
+
 <details>
 <summary><h2>API Endpoints</h></summary>
+
+> [!IMPORTANT]
+>
+> Client library compatible with Langchain, llamaindex, and haystack integrations coming soon.
+- [API Endpoints](#api-endpoints)
+  - [Document Parsing](#document-parsing)
+    - [Parse Any Document](#parse-any-document)
+    - [Parse PDF](#parse-pdf)
+    - [Parse PowerPoint](#parse-powerpoint)
+    - [Parse Word Document](#parse-word-document)
+  - [Media Parsing](#media-parsing)
+    - [Parse Any Media](#parse-any-media)
+    - [Parse Image](#parse-image)
+    - [Process Image](#process-image)
+    - [Parse Video](#parse-video)
+    - [Parse Audio](#parse-audio)
+  - [Website Parsing](#website-parsing)
+    - [Parse Website](#parse-website)
 
 ### Document Parsing
 
@@ -246,13 +250,14 @@ Arguments:
 - `url`: The URL of the website to parse
 </details>
 
-## Coming Soon
+## Coming Soon/ RoadMap
+🦙 LlamaIndex | Langchain | Haystack integrations coming soon
 📚 Batch processing data
 ⭐ Dynamic chunking and structured data extraction based on specified Schema  
 🛠️ One magic API: just feed in your file prompt what you want, and we will take care of the rest  
 🔧 Dynamic model selection and support for external APIs  
 📄 Batch processing for handling multiple files at once  
-🦙 New open-source model to replace Surya OCR and Marker  
+📦 New open-source model to replace Surya OCR and Marker  
 
 **Final goal**: replace all the different models currently being used with a single MultiModel Model to parse any type of data and get the data you need.
 
