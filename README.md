@@ -187,7 +187,7 @@ curl -X POST -F "file=@/path/to/document.docx" http://localhost:8000/parse_docum
 
 ### Media Parsing
 
-#### Parse Any Media
+<!-- #### Parse Any Media
 
 Endpoint: `/parse_media`
 Method: POST
@@ -197,7 +197,7 @@ Parses images, videos, or audio files.
 Curl command:
 ```
 curl -X POST -F "file=@/path/to/media_file" http://localhost:8000/parse_media
-```
+``` -->
 
 #### Parse Image
 
@@ -217,6 +217,9 @@ Endpoint: `/parse_media/process_image`
 Method: POST
 
 Processes an image with a specific task.
+
+Possible task inputs:
+`OCR | OCR with Region | Caption | Detailed Caption | More Detailed Caption | Object Detection | Dense Region Caption | Region Proposal`
 
 Curl command:
 ```
@@ -265,9 +268,9 @@ Curl command:
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"url": "https://example.com"}' http://localhost:8000/parse_website
 ```
-
 Arguments:
 - `url`: The URL of the website to parse
+
 </details>
 
 ## Coming Soon/ RoadMap
