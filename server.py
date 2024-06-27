@@ -22,6 +22,10 @@ def add(app: FastAPI):
     allow_methods=["*"],
     allow_headers=["*"])
 
+@app.get("/")
+def omniparse_home():
+    return {"message": "Welcome to OmniParse: head over to /docs to access the API endpoints"}
+
 # Include routers in the main app
 app.include_router(document_router, prefix="/parse_document", tags=["Documents"])
 app.include_router(image_router, prefix="/parse_image" ,tags=["Images"] )
