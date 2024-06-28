@@ -29,5 +29,5 @@ pip install -e .
 Run the Server:
 
 ```bash
-python server.py
+python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 ```

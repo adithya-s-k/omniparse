@@ -1,7 +1,6 @@
 # Table of contents
 
 * [OmniPrase](README.md)
-* [Quick Start](quick-start.md)
 * [Installation](installation.md)
 * [Deployment](deployment.md)
 * [Integration](integration.md)
