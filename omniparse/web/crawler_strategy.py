@@ -109,12 +109,6 @@ class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
         self.driver = webdriver.Chrome(service=self.service, options=self.options)
 
     def crawl(self, url: str) -> str:
-        if self.use_cached_html:
-            cache_file_path = os.path.join(Path.home(), ".crawl4ai", "cache", url.replace("/", "_"))
-            if os.path.exists(cache_file_path):
-                with open(cache_file_path, "r") as f:
-                    return f.read()
-
         try:
             if self.verbose:
                 print(f"[LOG] Crawling {url} using Web Crawler...")
