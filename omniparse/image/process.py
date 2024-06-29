@@ -20,24 +20,24 @@ def pre_process_image(image, task_prompt, vision_model, vision_processor):
     elif task_prompt == 'Region Proposal':
         task_prompt = '<REGION_PROPOSAL>'
         results = run_example(task_prompt, image, vision_model, vision_processor)
-    # elif task_prompt == 'Caption to Phrase Grounding':
-    #     task_prompt = '<CAPTION_TO_PHRASE_GROUNDING>'
-    #     results = run_example(task_prompt, image, text_input, vision_model, vision_processor)
-    # elif task_prompt == 'Referring Expression Segmentation':
-    #     task_prompt = '<REFERRING_EXPRESSION_SEGMENTATION>'
-    #     results = run_example(task_prompt, image, text_input, vision_model, vision_processor)
-    # elif task_prompt == 'Region to Segmentation':
-    #     task_prompt = '<REGION_TO_SEGMENTATION>'
-    #     results = run_example(task_prompt, image, text_input, vision_model, vision_processor)
-    # elif task_prompt == 'Open Vocabulary Detection':
-    #     task_prompt = '<OPEN_VOCABULARY_DETECTION>'
-    #     results = run_example(task_prompt, image, text_input, vision_model, vision_processor)
-    # elif task_prompt == 'Region to Category':
-    #     task_prompt = '<REGION_TO_CATEGORY>'
-    #     results = run_example(task_prompt, image, text_input, vision_model, vision_processor)
-    # elif task_prompt == 'Region to Description':
-    #     task_prompt = '<REGION_TO_DESCRIPTION>'
-    #     results = run_example(task_prompt, image, text_input, vision_model, vision_processor)
+    elif task_prompt == 'Caption to Phrase Grounding':
+        task_prompt = '<CAPTION_TO_PHRASE_GROUNDING>'
+        results = run_example(task_prompt, image, vision_model, vision_processor)
+    elif task_prompt == 'Referring Expression Segmentation':
+        task_prompt = '<REFERRING_EXPRESSION_SEGMENTATION>'
+        results = run_example(task_prompt, image, vision_model, vision_processor)
+    elif task_prompt == 'Region to Segmentation':
+        task_prompt = '<REGION_TO_SEGMENTATION>'
+        results = run_example(task_prompt, image,vision_model, vision_processor)
+    elif task_prompt == 'Open Vocabulary Detection':
+        task_prompt = '<OPEN_VOCABULARY_DETECTION>'
+        results = run_example(task_prompt, image, vision_model, vision_processor)
+    elif task_prompt == 'Region to Category':
+        task_prompt = '<REGION_TO_CATEGORY>'
+        results = run_example(task_prompt, image, vision_model, vision_processor)
+    elif task_prompt == 'Region to Description':
+        task_prompt = '<REGION_TO_DESCRIPTION>'
+        results = run_example(task_prompt, image, vision_model, vision_processor)
     elif task_prompt == 'OCR':
         task_prompt = '<OCR>'
         results = run_example(task_prompt, image, vision_model, vision_processor)
