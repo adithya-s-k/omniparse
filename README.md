@@ -189,7 +189,7 @@ curl -X POST -F "file=@/path/to/media_file" http://localhost:8000/parse_media
 
 #### Parse Image
 
-Endpoint: `/parse_media/image`
+Endpoint: `/parse_image/image`
 Method: POST
 
 Parses image files (PNG, JPEG, JPG, TIFF, WEBP).
@@ -201,7 +201,7 @@ curl -X POST -F "file=@/path/to/image.jpg" http://localhost:8000/parse_media/ima
 
 #### Process Image
 
-Endpoint: `/parse_media/process_image`
+Endpoint: `/parse_image/process_image`
 Method: POST
 
 Processes an image with a specific task.
