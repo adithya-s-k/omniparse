@@ -18,10 +18,12 @@ single_task_list = [
 
 header_markdown = """
 
+#
+
 ## Problem Statement
 It's challenging to process data as it comes in different shapes and sizes. OmniParse aims to be an ingestion/parsing platform where you can ingest any type of data, such as documents, images, audio, video, and web content, and get the most structured and actionable output that is GenAI (LLM) friendly.
 
-<table>
+<table style="width:100%">
   <thead>
     <tr>
       <th>Features</th>
@@ -55,11 +57,9 @@ It's challenging to process data as it comes in different shapes and sizes. Omni
     </tr>
   </tbody>
 </table>
----
 
 ## Installation
-> Note: The server only works on Linux-based systems. This is due to certain dependencies and system-specific configurations that are not compatible with Windows or macOS.
-To install OmniParse, you can use `pip`:
+> Note: The server only works on Linux-based systems. This is due to certain dependencies and system-specific configurations that are not compatible with Windows or macOS.Please use Docker image provided below to run omniparse
 
 ```bash
 git clone https://github.com/adithya-s-k/omniparse
@@ -119,7 +119,7 @@ Run the Server:
 ```bash
 python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 ```
-
+&nbsp;  
 - `--documents`: Load in all the models that help you parse and ingest documents (Surya OCR series of models and Florence-2).
 - `--media`: Load in Whisper model to transcribe audio and video files.
 - `--web`: Set up selenium crawler.
@@ -134,16 +134,17 @@ python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 | Media(Audio) | .mp3, .wav, .aac                                    |
 | Web          | dynamic webpages, http://<anything>.com             |
 
+### Support
+If you've found this project valuable, your ⭐ star on [Github](https://github.com/adithya-s-k/omniparse) would mean a lot!
+
 <p align="left">
   <a href="https://github.com/adithya-s-k/omniparse">
-    <img src="https://api.star-history.com/svg?repos=adithya-s-k/omniparse&type=Date" alt="Star History Chart width="300px">
+    <img src="https://api.star-history.com/svg?repos=adithya-s-k/omniparse&type=Date" alt="Star History Chart" width="500px">
   </a>
 </p>
 
-
-## Contact
-For any inquiries, please contact us at adithyaskolavi@gmail.com
-
+### Contact
+Encountering difficulties or errors? Please raise an issue on [GitHub](https://github.com/adithya-s-k/omniparse/issues).
 """
 
 def decode_base64_to_pil(base64_str):
