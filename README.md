@@ -21,11 +21,12 @@ Gradio and NextJS interactive demo coming soon
 ## Features
 ✅ Completely local, no external APIs  \
 ✅ Fits in a T4 GPU \
-✅ Supports 10+ file types  
-✅ Convert documents, multimedia, and web pages to high-quality structured markdown  
-✅ Table extraction, image extraction/captioning, audio/video transcription, web page crawling  
-✅ Easily deployable using Docker and Skypilot  
-✅ Colab friendly  
+✅ Supports ~20 file types  \
+✅ Convert documents, multimedia, and web pages to high-quality structured markdown  \
+✅ Table extraction, image extraction/captioning, audio/video transcription, web page crawling  \
+✅ Easily deployable using Docker and Skypilot  \
+✅ Colab friendly  \
+✅ Interative UI powered by Gradio   \
 
 ### Problem Statement
 It's challenging to process data as it comes in different shapes and sizes. OmniParse aims to be an ingestion/parsing platform where you can ingest any type of data, such as documents, images, audio, video, and web content, and get the most structured and actionable output that is GenAI (LLM) friendly.
@@ -92,23 +93,11 @@ python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 - `--media`: Load in Whisper model to transcribe audio and video files.
 - `--web`: Set up selenium crawler.
 
-## Running the Server
-
-To start the API server, run the following command:
-
-```
-python main.py --host 0.0.0.0 --port 8000
-```
-
-Arguments:
-- `--host`: Host IP address (default: 0.0.0.0)
-- `--port`: Port number (default: 8000)
-
 ## Supported Data Types
 
 | Type      | Supported Extensions                                |
 |-----------|-----------------------------------------------------|
-| Documents | .doc, .docx, .odt, .pdf, .ppt, .pptx                |
+| Documents | .doc, .docx, .pdf, .ppt, .pptx                      |
 | Images    | .png, .jpg, .jpeg, .tiff, .bmp, .heic               |
 | Video     | .mp4, .mkv, .avi, .mov                              |
 | Audio     | .mp3, .wav, .aac                                    |
@@ -304,7 +293,7 @@ Thank you to the authors for their contributions to these models.
 ## Contact
 <p align="center">
   <a href="https://adithyask.com">
-    <img src="https://api.star-history.com/svg?repos=adithya-s-k/omniparse-api&type=Date" alt="Star History Chart">
+    <img src="https://api.star-history.com/svg?repos=adithya-s-k/omniparse&type=Date" alt="Star History Chart">
   </a>
 </p>
 For any inquiries, please contact us at adithyaskolavi@gmail.com
