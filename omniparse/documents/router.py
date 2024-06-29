@@ -2,10 +2,11 @@ import os
 import tempfile
 import subprocess
 from omniparse.documents.parse import parse_single_pdf
-from fastapi import APIRouter, File, UploadFile, HTTPException, Depends
+from fastapi import APIRouter, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from omniparse import get_shared_state
-from omniparse.documents import parse_pdf , parse_ppt , parse_doc
+# from omniparse.documents import parse_pdf , parse_ppt , parse_doc
+from omniparse.documents import parse_pdf
 from omniparse.utils import encode_images
 
 document_router = APIRouter()
@@ -26,7 +27,7 @@ async def parse_pdf_endpoint(file: UploadFile = File(...)):
     
 # Document parsing endpoints
 @document_router.post("/ppt")
-async def parse_ppt(file: UploadFile = File(...)):
+async def parse_ppt_endpoint(file: UploadFile = File(...)):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".ppt") as tmp_ppt:
         tmp_ppt.write(await file.read())
         tmp_ppt.flush()
@@ -51,7 +52,7 @@ async def parse_ppt(file: UploadFile = File(...)):
     return JSONResponse(content={"message": "PPT parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images})
 
 @document_router.post("/docs")
-async def parse_docs(file: UploadFile = File(...)):
+async def parse_doc_endpoint(file: UploadFile = File(...)):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".ppt") as tmp_ppt:
         tmp_ppt.write(await file.read())
         tmp_ppt.flush()
@@ -76,7 +77,7 @@ async def parse_docs(file: UploadFile = File(...)):
     return JSONResponse(content={"message": "PPT parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images})
 
 @document_router.post("")
-async def parse_document(file: UploadFile = File(...)):
+async def parse_any_endpoint(file: UploadFile = File(...)):
     allowed_extensions = {".pdf", ".ppt", ".pptx", ".doc", ".docx"}
     file_ext = os.path.splitext(file.filename)[1]
     
