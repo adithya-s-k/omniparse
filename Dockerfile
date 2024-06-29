@@ -55,6 +55,8 @@ WORKDIR /app
 # Install Python package (assuming it has a setup.py)
 RUN pip3 install --no-cache-dir -e .
 
+RUN pip install transformers==4.41.2
+
 # Set environment variables
 ENV CHROME_BIN=/usr/bin/google-chrome \
     CHROMEDRIVER=/usr/local/bin/chromedriver \
