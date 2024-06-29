@@ -132,12 +132,6 @@ class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
                     )
             
             html = self.driver.page_source
-            
-            # Store in cache
-            cache_file_path = os.path.join(Path.home(), ".crawl4ai", "cache", url.replace("/", "_"))
-            with open(cache_file_path, "w") as f:
-                f.write(html)
-                
             if self.verbose:
                 print(f"[LOG] ✅ Crawled {url} successfully!")
             

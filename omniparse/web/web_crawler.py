@@ -2,14 +2,14 @@ import os, time
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 from pathlib import Path
 
-from .models import UrlModel, CrawlResult
-from .utils import *
-from .chunking_strategy import *
-from .extraction_strategy import *
-from .crawler_strategy import *
+from omniparse.web.models import UrlModel, CrawlResult
+from omniparse.web.utils import *
+from omniparse.web.chunking_strategy import *
+from omniparse.web.extraction_strategy import *
+from omniparse.web.crawler_strategy import *
 from typing import List
 from concurrent.futures import ThreadPoolExecutor
-from .config import *
+from omniparse.web.config import *
 
 
 class WebCrawler:
@@ -17,7 +17,7 @@ class WebCrawler:
         self,
         # db_path: str = None,
         crawler_strategy: CrawlerStrategy = None,
-        always_by_pass_cache: bool = False,
+        always_by_pass_cache: bool = True,
         verbose: bool = False,
     ):
         # self.db_path = db_path
@@ -28,10 +28,10 @@ class WebCrawler:
     def warmup(self):
         print("[LOG]   Warming up the WebCrawler")
         result = self.run(
-            url='https://crawl4ai.uccode.io/',
+            url='https://adithyask.com',
             word_count_threshold=5,
             extraction_strategy= NoExtractionStrategy(),
-            bypass_cache=False,
+            bypass_cache=True,
             verbose = False
         )
         self.ready = True
@@ -114,6 +114,8 @@ class WebCrawler:
             verbose=True,
             **kwargs,
         ) -> CrawlResult:
+            extracted_content = None
+            cached=None
             extraction_strategy = extraction_strategy or NoExtractionStrategy()
             extraction_strategy.verbose = verbose
             if not isinstance(extraction_strategy, ExtractionStrategy):
@@ -123,16 +125,6 @@ class WebCrawler:
             
             if word_count_threshold < MIN_WORD_THRESHOLD:
                 word_count_threshold = MIN_WORD_THRESHOLD
-
-            # Check cache first
-            cached = None
-            extracted_content = None
-            
-            if cached:
-                html = cached[1]
-                extracted_content = cached[2]
-                if screenshot:
-                    screenshot = cached[9]
             
             else:
                 if user_agent:
