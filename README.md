@@ -16,7 +16,6 @@
 
 ## Try it out
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adithya-s-k/omniparse/blob/main/examples/OmniParse_GoogleColab.ipynb)
-Gradio and NextJS interactive demo coming soon
 
 ## Features
 ✅ Completely local, no external APIs  \
