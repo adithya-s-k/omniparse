@@ -31,3 +31,7 @@ Run the Server:
 ```bash
 python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 ```
+
+* `--documents`: Load in all the models that help you parse and ingest documents (Surya OCR series of models and Florence-2).
+* `--media`: Load in Whisper model to transcribe audio and video files.
+* `--web`: Set up selenium crawler.

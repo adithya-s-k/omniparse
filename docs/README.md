@@ -17,7 +17,7 @@ layout:
     visible: true
 ---
 
-# OmniPrase
+# OmniParse
 
 &#x20;[![GitHub Stars](https://img.shields.io/github/stars/adithya-s-k/omniparse?style=social)](https://github.com/adithya-s-k/omniparse/stargazers) [![GitHub Forks](https://img.shields.io/github/forks/adithya-s-k/omniparse?style=social)](https://github.com/adithya-s-k/omniparse/network/members) [![GitHub Issues](https://img.shields.io/github/issues/adithya-s-k/omniparse)](https://github.com/adithya-s-k/omniparse/issues) [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/adithya-s-k/omniparse)](https://github.com/adithya-s-k/omniparse/pulls) [![License](https://img.shields.io/github/license/adithya-s-k/omniparse)](../LICENSE)
 
@@ -25,7 +25,9 @@ layout:
 
 ### Try it out
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adithya-s-k/omniparse/blob/main/examples/OmniParse\_GoogleColab.ipynb) Gradio and NextJS interactive demo coming soon
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adithya-s-k/omniparse/blob/main/examples/OmniParse\_GoogleColab.ipynb)&#x20;
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p>OmniPrase UI</p></figcaption></figure>
 
 ### Features
 
@@ -41,7 +43,7 @@ layout:
 
 It's challenging to process data as it comes in different shapes and sizes. OmniParse aims to be an ingestion/parsing platform where you can ingest any type of data, such as documents, images, audio, video, and web content, and get the most structured and actionable output that is GenAI (LLM) friendly.
 
-| Original PDF                                                                                                                                                                               | Marker-API                                                                                                                                                                           | PyPDF                                                                                                                                                               |
+| Original PDF                                                                                                                                                                               | OmniParse                                                                                                                                                                            | PyPDF                                                                                                                                                               |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [![Original PDF](https://github.com/adithya-s-k/marker-api/raw/master/data/images/original\_pdf.png)](https://github.com/adithya-s-k/marker-api/blob/master/data/images/original\_pdf.png) | [![Marker-API](https://github.com/adithya-s-k/marker-api/raw/master/data/images/marker\_api.png)](https://github.com/adithya-s-k/marker-api/blob/master/data/images/marker\_api.png) | [![PyPDF](https://github.com/adithya-s-k/marker-api/raw/master/data/images/pypdf.png)](https://github.com/adithya-s-k/marker-api/blob/master/data/images/pypdf.png) |
 
@@ -307,8 +309,4 @@ Thank you to the authors for their contributions to these models.
 
 ***
 
-### Contact
-
-[![Star History Chart](https://api.star-history.com/svg?repos=adithya-s-k/omniparse-api\&type=Date)](https://adithyask.com)
-
-For any inquiries, please contact us at adithyaskolavi@gmail.com
+<figure><img src="https://api.star-history.com/svg?repos=adithya-s-k/omniparse&#x26;type=Date" alt=""><figcaption></figcaption></figure>

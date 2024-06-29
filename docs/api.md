@@ -6,6 +6,8 @@ description: >-
 
 # API
 
+## Documents
+
 **Parse Any Document**
 
 Endpoint: `/parse_document` Method: POST
@@ -54,7 +56,7 @@ Curl command:
 curl -X POST -F "file=@/path/to/document.docx" http://localhost:8000/parse_document/docs
 ```
 
-#### Media Parsing
+## Image
 
 **Parse Image**
 
@@ -65,7 +67,7 @@ Parses image files (PNG, JPEG, JPG, TIFF, WEBP).
 Curl command:
 
 ```
-curl -X POST -F "file=@/path/to/image.jpg" http://localhost:8000/parse_media/image
+curl -X POST -F "file=@/path/to/image.jpg" http://localhost:8000/parse_image/image
 ```
 
 **Process Image**
@@ -79,7 +81,7 @@ Possible task inputs: `OCR | OCR with Region | Caption | Detailed Caption | More
 Curl command:
 
 ```
-curl -X POST -F "image=@/path/to/image.jpg" -F "task=Caption" -F "prompt=Optional prompt" http://localhost:8000/parse_media/process_image
+curl -X POST -F "image=@/path/to/image.jpg" -F "task=Caption" http://localhost:8000/parse_image/process_image
 ```
 
 Arguments:
@@ -87,6 +89,8 @@ Arguments:
 * `image`: The image file
 * `task`: The processing task (e.g., Caption, Object Detection)
 * `prompt`: Optional prompt for certain tasks
+
+## Media
 
 **Parse Video**
 
@@ -112,7 +116,7 @@ Curl command:
 curl -X POST -F "file=@/path/to/audio.mp3" http://localhost:8000/parse_media/audio
 ```
 
-#### Website Parsing
+## Website
 
 **Parse Website**
 
