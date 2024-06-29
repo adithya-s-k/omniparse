@@ -383,7 +383,7 @@ def parse_website(url, request: gr.Request):
     except requests.RequestException as e:
         raise gr.Error(f"HTTP error occurred: {e}")
 
-demo_ui = gr.Blocks(theme=gr.themes.Monochrome(radius_size=gr.themes.sizes.radius_sm))
+demo_ui = gr.Blocks(theme=gr.themes.Monochrome(radius_size=gr.themes.sizes.radius_none))
 
 with demo_ui:
     gr.Markdown("<img src='https://raw.githubusercontent.com/adithya-s-k/omniparse/main/docs/assets/omniparse_logo.png' width='500px'>")
