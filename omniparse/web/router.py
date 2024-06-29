@@ -8,7 +8,7 @@ model_state = get_shared_state()
 website_router = APIRouter()
 
 # Website parsing endpoint
-@website_router.post("/")
+@website_router.post("/parse")
 async def parse_website(url: str):
     try:
         result = await parse_url(url, model_state)
