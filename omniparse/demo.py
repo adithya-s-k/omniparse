@@ -9,12 +9,16 @@ import gradio as gr
 
 single_task_list = [
     'Caption', 'Detailed Caption', 'More Detailed Caption', 
-    'OCR', 'OCR with Region',
-    'Object Detection',
-    'Dense Region Caption', 'Region Proposal', 'Caption to Phrase Grounding',
-    'Referring Expression Segmentation', 'Region to Segmentation',
-    'Open Vocabulary Detection', 'Region to Category', 'Region to Description',
+    'OCR', 'OCR with Region'
 ]
+# single_task_list = [
+#     'Caption', 'Detailed Caption', 'More Detailed Caption', 
+#     'OCR', 'OCR with Region',
+#     'Object Detection',
+#     'Dense Region Caption', 'Region Proposal', 'Caption to Phrase Grounding',
+#     'Referring Expression Segmentation', 'Region to Segmentation',
+#     'Open Vocabulary Detection', 'Region to Category', 'Region to Description',
+# ]
 
 header_markdown = """
 
@@ -181,11 +185,12 @@ def parse_document(input_file_path, parameters, request: gr.Request):
         
         document_response = response.json()
         
-        # print(document_response)
-        images = document_response["images"]
-        pil_images = [decode_base64_to_pil(base64_str) for base64_str in images.values()]
+        images = document_response.get('images', [])
+
+        # Decode each base64-encoded image to a PIL image
+        pil_images = [decode_base64_to_pil(image_dict['image']) for image_dict in images]
         
-        return str(document_response["markdown"]) , gr.Gallery(value=pil_images , visible=True) , str(document_response["markdown"]) , gr.JSON(value=document_response , visible=True)
+        return str(document_response["text"]) , gr.Gallery(value=pil_images , visible=True) , str(document_response["text"]) , gr.JSON(value=document_response , visible=True)
             
     
     except Exception as e:
@@ -235,14 +240,17 @@ def process_image(input_file_path, parameters, request: gr.Request):
 
                 
         image_process_response = response.json()
-        print(image_process_response)
+        
+        images = image_process_response.get('images', [])
+        # Decode each base64-encoded image to a PIL image
+        pil_images = [decode_base64_to_pil(image_dict['image']) for image_dict in images]
         
         # Decode the image if present in the response
         # images = document_response.get('image', {})
         # pil_images = [decode_base64_to_pil(base64_str) for base64_str in images.values()]
         
-        return (gr.update(value=image_process_response["results"]), 
-                gr.Gallery(visible=False), 
+        return (gr.update(value=image_process_response["text"]), 
+                gr.Gallery(value=pil_images, visible=(len(images) != 0)), 
                 gr.JSON(value=image_process_response, visible=True))
     
     except Exception as e:
@@ -283,12 +291,14 @@ def parse_image(input_file_path, parameters, request: gr.Request):
         document_response = response.json()
         
         # Decode the image if present in the response
-        images = document_response.get('image', {})
-        pil_images = [decode_base64_to_pil(base64_str) for base64_str in images.values()]
+        images = document_response.get('images', [])
+
+        # Decode each base64-encoded image to a PIL image
+        pil_images = [decode_base64_to_pil(image_dict['image']) for image_dict in images]
         
-        return (gr.update(value=document_response["markdown"]), 
+        return (gr.update(value=document_response["text"]), 
                 gr.Gallery(value=pil_images, visible=True), 
-                gr.update(value=document_response["markdown"]), 
+                gr.update(value=document_response["text"]), 
                 gr.update(value=document_response, visible=True))
     
     except Exception as e:
@@ -374,10 +384,15 @@ def parse_website(url, request: gr.Request):
         base64_image = result.get("screenshot", "")
         
         screenshot = [decode_base64_to_pil(base64_image)] if base64_image else []
+        
+        images = website_response.get('images', [])
+
+        # Decode each base64-encoded image to a PIL image
+        pil_images = [decode_base64_to_pil(image_dict['image']) for image_dict in images]
 
         return (gr.update(value=markdown, visible=True), 
                 gr.update(value=html, visible=True), 
-                gr.update(value=screenshot, visible=bool(screenshot)), 
+                gr.update(value=pil_images, visible=bool(screenshot)), 
                 gr.JSON(value=website_response ,  visible=True))
     
     except requests.RequestException as e:
@@ -422,7 +437,7 @@ with demo_ui:
                             image_process_button = gr.Button("Process Image")
                         with gr.Column(scale=200):
                             image_process_output_text = gr.Textbox(label="Output Text")
-                            image_process_output_image = gr.Image(label="Output Image ⌛" , interactive=False)
+                            image_process_output_image = gr.Gallery(label="Output Image ⌛" , interactive=False)
                     with gr.Accordion("JSON Output"):
                         image_process_json = gr.JSON(label="Output JSON", visible=False)
                     with gr.Accordion("Use API", open=True):
