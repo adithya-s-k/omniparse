@@ -11,8 +11,8 @@ model_state = get_shared_state()
 async def parse_image_endpoint(file: UploadFile = File(...)):
     try:
         file_bytes = await file.read()
-        result = parse_image(file_bytes, model_state)
-        return JSONResponse(content=result)
+        result : responseDocument = parse_image(file_bytes, model_state)
+        return JSONResponse(content=result.model_dump())
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
