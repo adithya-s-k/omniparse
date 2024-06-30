@@ -334,12 +334,12 @@ def parse_media(input_file_path, parameters, request: gr.Request):
             response = requests.post(post_url, files=files, headers={"accept": "application/json"})
         
         media_response = response.json()
-        print(media_response["markdown"])
+        # print(media_response["text"])
         # # Handle images if present in the response
         # images = document_response.get('images', {})
         # pil_images = [decode_base64_to_pil(base64_str) for base64_str in images.values()]
         
-        return gr.update(value = str(media_response["markdown"])), gr.update(visible=False), gr.update(value = str(media_response["markdown"])), gr.update(value=media_response, visible=True)
+        return gr.update(value = str(media_response["text"])), gr.update(visible=False), gr.update(value = str(media_response["text"])), gr.update(value=media_response, visible=True)
     
     except Exception as e:
         raise gr.Error(f"Failed to parse: {e}")
@@ -368,8 +368,8 @@ def parse_website(url, request: gr.Request):
         website_response = post_response.json()
 
         # Extract necessary data from the response
-        result = website_response.get("result", {})
-        markdown = result.get("markdown", "")
+        result = website_response.get("metadata", {})
+        markdown = website_response.get("text", "")
         html = result.get("cleaned_html", "")
         base64_image = result.get("screenshot", "")
         
@@ -393,7 +393,7 @@ with demo_ui:
             with gr.Row():
                 with gr.Column(scale=80):
                     document_file = gr.File(label="Upload Document", type="filepath", file_count="single", interactive=True , file_types=[".pdf",".ppt",".doc",".pptx",".docx"])
-                    with gr.Accordion("Parameters", visible=False):
+                    with gr.Accordion("Parameters", visible=True):
                         document_parameter = gr.Dropdown(["Fixed Size Chunking","Regex Chunking","Semantic Chunking"], label="Chunking Stratergy")
                         if document_parameter == "Fixed Size Chunking":
                             document_chunk_size = gr.Number(minimum=250, maximum=10000, step=100 , show_label=False)
@@ -417,7 +417,7 @@ with demo_ui:
                 with gr.TabItem("Process"):
                     with gr.Row():
                         with gr.Column(scale=80):
-                            image_process_file = gr.File(label="Upload Image", type="filepath", file_count="single", interactive=True , file_types=["image"])
+                            image_process_file = gr.File(label="Upload Image", type="filepath", file_count="single", interactive=True , file_types=[".jpg",".jpeg",".png"])
                             image_process_parameter = gr.Dropdown(choices=single_task_list, label="Task Prompt", value="Caption", interactive=True)
                             image_process_button = gr.Button("Process Image")
                         with gr.Column(scale=200):
