@@ -4,10 +4,11 @@ import tempfile
 from fastapi import UploadFile
 from fastapi.responses import JSONResponse
 from moviepy.editor import VideoFileClip
+from omniparse.models import responseDocument
 from omniparse.media.utils import WHISPER_DEFAULT_SETTINGS
 from omniparse.media.utils import transcribe  # Assuming transcribe function is imported
 
-def parse_audio(input_data , model_state) -> dict:
+def parse_audio(input_data , model_state) -> responseDocument:
     try:
         if isinstance(input_data, bytes):
             with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
@@ -20,15 +21,15 @@ def parse_audio(input_data , model_state) -> dict:
 
         # Transcribe the audio file
         transcript = transcribe(audio_path=temp_audio_path, whisper_model= model_state.whisper_model ,**WHISPER_DEFAULT_SETTINGS)
-
-        return {"message": "Audio parsed successfully", "markdown": transcript['text']}
+        
+        return responseDocument(text=transcript['text'])
 
     finally:
         # Clean up the temporary file
         if os.path.exists(temp_audio_path):
             os.remove(temp_audio_path)
 
-def parse_video(input_data , model_state) -> dict:
+def parse_video(input_data , model_state) -> responseDocument:
     try:
         if isinstance(input_data, bytes):
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_video_file:
@@ -50,7 +51,7 @@ def parse_video(input_data , model_state) -> dict:
         # Transcribe the audio file
         transcript = transcribe(audio_path=audio_path, whisper_model= model_state.whisper_model ,**WHISPER_DEFAULT_SETTINGS)
 
-        return {"message": "Audio extracted and parsed successfully", "markdown": transcript['text']}
+        return responseDocument(text=transcript['text'])
 
     finally:
         # Clean up the temporary files
