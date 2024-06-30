@@ -394,7 +394,10 @@ with demo_ui:
                 with gr.Column(scale=80):
                     document_file = gr.File(label="Upload Document", type="filepath", file_count="single", interactive=True , file_types=[".pdf",".ppt",".doc",".pptx",".docx"])
                     with gr.Accordion("Parameters", visible=False):
-                        document_parameter = gr.CheckboxGroup(["chunk document"], show_label=False)
+                        document_parameter = gr.Dropdown(["Fixed Size Chunking","Regex Chunking","Semantic Chunking"], label="Chunking Stratergy")
+                        if document_parameter == "Fixed Size Chunking":
+                            document_chunk_size = gr.Number(minimum=250, maximum=10000, step=100 , show_label=False)
+                            document_overlap_size = gr.Number(minimum=250, maximum=1000 , step=100, show_label=False)
                     document_button = gr.Button("Parse Document")
                 with gr.Column(scale=200):
                     with gr.Accordion("Markdown"):
@@ -455,10 +458,10 @@ with demo_ui:
                     media_button = gr.Button("Parse Media")
                 with gr.Column(scale=200):
                     with gr.Accordion("Markdown"):
-                        media_markdown = gr.Markdown(" ")
+                        media_markdown = gr.Markdown("")
                         media_images = gr.Gallery(visible=False)
                     with gr.Accordion("Chunks", visible=False):
-                        media_chunks = gr.Markdown(" ")
+                        media_chunks = gr.Markdown("")
             with gr.Accordion("JSON Output"):
                         media_json = gr.JSON(label="Output JSON", visible=False)
             with gr.Accordion("Use API", open=True):
@@ -474,11 +477,11 @@ with demo_ui:
                         with gr.Column(scale=10):
                             crawl_button = gr.Button("➡️ Parse Website")
                     with gr.Accordion("Markdown"):
-                        crawl_markdown = gr.Markdown(visible=False)
+                        crawl_markdown = gr.Markdown()
                     with gr.Accordion("HTML"):
-                        crawl_html = gr.HTML(visible=False)
+                        crawl_html = gr.HTML()
                     with gr.Accordion("Screen Shots"):
-                        crawl_image = gr.Gallery(visible=False)
+                        crawl_image = gr.Gallery()
                     with gr.Accordion("JSON Output"):
                         crawl_json = gr.JSON(label="Output JSON", visible=False)
                     with gr.Accordion("Use API", open=True):
