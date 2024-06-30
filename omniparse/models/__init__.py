@@ -14,7 +14,7 @@ class responseImage(BaseModel):
 
 class responseDocument(BaseModel):
     text: str = ""
-    image: List[responseImage] = Field(default_factory=list)
+    images: List[responseImage] = Field(default_factory=list)
     metadata: Dict[str, Any] = Field(default_factory=dict)
     chunks: List[str] = Field(default_factory=list)
 
@@ -33,7 +33,7 @@ class responseDocument(BaseModel):
             raise ValueError("Unsupported image_data type. Should be either string (file path), PIL.Image instance, or base64 encoded string.")
 
         new_image = responseImage(image=self.encode_image_to_base64(pil_image), image_name=image_name, image_info=image_info)
-        self.image.append(new_image)
+        self.images.append(new_image)
         
     def encode_image_to_base64(self, image: PILImage.Image) -> str:
         # Convert PIL image to base64 string
