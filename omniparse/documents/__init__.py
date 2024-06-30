@@ -3,8 +3,9 @@ import tempfile
 import subprocess
 from omniparse.documents.parse import parse_single_pdf
 from omniparse.utils import encode_images
+from omniparse.models import responseDocument
 # Function to handle PDF parsing
-def parse_pdf(input_data , model_state) -> dict:
+def parse_pdf(input_data , model_state) -> responseDocument:
     try:
         if isinstance(input_data, bytes):
             with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf_file:
@@ -22,18 +23,23 @@ def parse_pdf(input_data , model_state) -> dict:
             raise ValueError("Invalid input data format. Expected bytes or PDF file path.")
 
         full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
-        images = encode_images(images)
+        
+        parse_pdf_result = responseDocument(
+            text=full_text,
+            metadata=out_meta
+        )
+        encode_images(images,parse_pdf_result)
 
         if cleanup_tempfile:
             os.remove(input_path)
 
-        return {"message": "PDF parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images}
+        return parse_pdf_result
 
     except Exception as e:
         raise RuntimeError(f"Error parsing PPT: {str(e)}")
 
 # Function to handle PPT and DOC parsing
-def parse_ppt(input_data ,model_state) -> dict:
+def parse_ppt(input_data ,model_state) -> responseDocument:
     try:
         if isinstance(input_data, bytes):
             print("Recieved ppt file")
@@ -58,15 +64,21 @@ def parse_ppt(input_data ,model_state) -> dict:
         full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
         images = encode_images(images)
         
+        parse_ppt_result = responseDocument(
+            text=full_text,
+            metadata=out_meta
+        )
+        encode_images(images,parse_ppt_result)
+        
         if input_data != input_path:
             os.remove(input_path)
         
-        return {"message": "Document parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images}
+        return parse_ppt_result
 
     except Exception as e:
         raise RuntimeError(f"Error parsing PPT: {str(e)}")
 
-def parse_doc(input_data ,model_state) -> dict:
+def parse_doc(input_data ,model_state) -> responseDocument:
     try:
         if isinstance(input_data, bytes):
             with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -90,10 +102,16 @@ def parse_doc(input_data ,model_state) -> dict:
         full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
         images = encode_images(images)
         
+        parse_doc_result = responseDocument(
+            text=full_text,
+            metadata=out_meta
+        )
+        encode_images(images,parse_doc_result)
+        
         if input_data != input_path:
             os.remove(input_path)
         
-        return {"message": "Document parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images}
+        return parse_doc_result
 
     except Exception as e:
         raise RuntimeError(f"Error parsing PPT: {str(e)}")

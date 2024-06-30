@@ -8,6 +8,7 @@ from omniparse import get_shared_state
 # from omniparse.documents import parse_pdf , parse_ppt , parse_doc
 from omniparse.documents import parse_pdf
 from omniparse.utils import encode_images
+from omniparse.models import responseDocument
 
 document_router = APIRouter()
 model_state = get_shared_state()
@@ -17,9 +18,9 @@ model_state = get_shared_state()
 async def parse_pdf_endpoint(file: UploadFile = File(...)):
     try:
         file_bytes = await file.read()
-        result = parse_pdf(file_bytes , model_state)
+        result : responseDocument = parse_pdf(file_bytes , model_state)
     
-        return JSONResponse(content=result)
+        return JSONResponse(content=result.model_dump())
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -43,13 +44,18 @@ async def parse_ppt_endpoint(file: UploadFile = File(...)):
         pdf_bytes = pdf_file.read()
 
     full_text, images, out_meta = parse_single_pdf(pdf_bytes, model_state.model_list)
-    images = encode_images(images)
 
     os.remove(input_path)
     os.remove(output_pdf_path)
     os.rmdir(output_dir)
     
-    return JSONResponse(content={"message": "PPT parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images})
+    result = responseDocument(
+        text=full_text,
+        metadata=out_meta
+    )
+    encode_images(images,result)
+    
+    return JSONResponse(content=result.model_dump())
 
 @document_router.post("/docs")
 async def parse_doc_endpoint(file: UploadFile = File(...)):
@@ -68,13 +74,14 @@ async def parse_doc_endpoint(file: UploadFile = File(...)):
         pdf_bytes = pdf_file.read()
 
     full_text, images, out_meta = parse_single_pdf(pdf_bytes, model_state.model_list)
-    images = encode_images(images)
 
-    os.remove(input_path)
-    os.remove(output_pdf_path)
-    os.rmdir(output_dir)
+    result = responseDocument(
+        text=full_text,
+        metadata=out_meta
+    )
+    encode_images(images,result)
     
-    return JSONResponse(content={"message": "PPT parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images})
+    return JSONResponse(content=result.model_dump())
 
 @document_router.post("")
 async def parse_any_endpoint(file: UploadFile = File(...)):
@@ -98,11 +105,16 @@ async def parse_any_endpoint(file: UploadFile = File(...)):
     
     # Common parsing logic
     full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
-    images = encode_images(images)
     
     os.remove(input_path)
     
-    return JSONResponse(content={"message": "Document parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images})
+    result = responseDocument(
+        text=full_text,
+        metadata=out_meta
+    )
+    encode_images(images,result)
+    
+    return JSONResponse(content=result.model_dump())
 
 
 # @document_router.post("/docs")
