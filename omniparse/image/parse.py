@@ -1,9 +1,7 @@
 import warnings
-warnings.filterwarnings("ignore", category=UserWarning) # Filter torch pytree user warnings
-
+from typing import List, Dict, Tuple, Optional
 import pypdfium2 as pdfium # Needs to be at the top to avoid warnings
 from PIL import Image
-
 from omniparse.documents.utils import flush_cuda_memory
 from omniparse.documents.tables.table import format_tables
 from omniparse.documents.debug.data import dump_bbox_debug_data
@@ -25,14 +23,14 @@ from omniparse.documents.postprocessors.markdown import merge_spans, merge_lines
 from omniparse.documents.cleaners.text import cleanup_text
 from omniparse.documents.images.extract import extract_images
 from omniparse.documents.images.save import images_to_dict
-
-from typing import List, Dict, Tuple, Optional
 from omniparse.documents.settings import settings
+
+warnings.filterwarnings("ignore", category=UserWarning) # Filter torch pytree user warnings
 
 
 def parse_single_image(
         image: Image.Image,
-        model_lst: List,
+        model_list: List,
         metadata: Optional[Dict] = None,
         langs: Optional[List[str]] = None,
         batch_multiplier: int = 1
@@ -54,10 +52,10 @@ def parse_single_image(
         "languages": langs,
     }
 
-    texify_model, layout_model, order_model, edit_model, detection_model, ocr_model = model_lst
+    texify_model, layout_model, order_model, edit_model, detection_model, ocr_model = model_list
 
     # Identify text lines on pages
-    text_line_prediction = surya_detection(image, detection_model, batch_multiplier=batch_multiplier)
+    surya_detection(image, detection_model, batch_multiplier=batch_multiplier)
     flush_cuda_memory()
 
     # OCR pages as needed

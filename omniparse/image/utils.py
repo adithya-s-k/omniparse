@@ -1,3 +1,4 @@
+import io
 import random
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -66,3 +67,8 @@ def draw_ocr_bboxes(image, prediction):
     return image
 
 
+def fig_to_pil(fig):
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    return Image.open(buf)

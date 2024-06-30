@@ -6,8 +6,9 @@ import img2pdf
 from PIL import Image
 # from omniparse.document.parse import parse_single_image
 from omniparse.documents.parse import parse_single_pdf
-from omniparse.image.process import pre_process_image
+from omniparse.image.process import process_image_task
 from omniparse.utils import encode_images
+from omniparse.models import responseDocument
 
 def parse_image(input_data, model_state) -> dict:
     temp_files = []
@@ -44,9 +45,14 @@ def parse_image(input_data, model_state) -> dict:
 
         # Parse the PDF file
         full_text, images, out_meta = parse_single_pdf(temp_pdf_path, model_state.model_list)
-        images = encode_images(images)
+        
+        parse_image_result = responseDocument(
+            text=full_text,
+            metadata=out_meta
+        )
+        encode_images(images,parse_image_result)
 
-        return {"message": "Document parsed successfully", "markdown": full_text, "metadata": out_meta, "images": images}
+        return parse_image_result
 
     finally:
         # Clean up the temporary files
@@ -54,7 +60,7 @@ def parse_image(input_data, model_state) -> dict:
             if os.path.exists(file_path):
                 os.remove(file_path)
 
-def process_image(input_data, task, model_state) -> dict:
+def process_image(input_data, task, model_state) -> responseDocument:
     try:
         temp_files = []
 
@@ -76,9 +82,9 @@ def process_image(input_data, task, model_state) -> dict:
         image_data = Image.open(temp_file_path).convert("RGB")
 
         # Process the image using your function (e.g., process_image)
-        results = pre_process_image(image_data, task, vision_model = model_state.vision_model, vision_processor = model_state.vision_processor)
+        image_process_results : responseDocument = process_image_task(image_data, task, model_state)
 
-        return {"results": results}
+        return image_process_results
 
     finally:
         # Clean up the temporary files
