@@ -12,9 +12,9 @@ website_router = APIRouter()
 @website_router.post("/parse")
 async def parse_website(url: str):
     try:
-        parse_web_result = await parse_url(url, model_state)
+        parse_web_result:responseDocument = await parse_url(url, model_state)
         
-        return JSONResponse(content=parse_web_result.dict())
+        return JSONResponse(content=parse_web_result.model_dump())
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

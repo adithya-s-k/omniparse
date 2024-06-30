@@ -3,7 +3,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from omniparse.models import responseDocument
 
-async def parse_url(url: str , model_state) -> dict:
+async def parse_url(url: str , model_state) -> responseDocument:
     try:
         logging.debug("[LOG] Loading extraction and chunking strategies...")
         # Hardcoded parameters (adjust as needed)
