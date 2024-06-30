@@ -12,10 +12,8 @@ import base64
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 from typing import List
-import requests
-import os
 from pathlib import Path
-from .utils import wrap_text
+from omniparse.web.utils import wrap_text
 
 logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
 logger.setLevel(logging.WARNING)
@@ -34,9 +32,6 @@ http_client_logger.setLevel(logging.WARNING)
 driver_finder_logger = logging.getLogger('selenium.webdriver.common.driver_finder')
 driver_finder_logger.setLevel(logging.WARNING)
 
-
-
-
 class CrawlerStrategy(ABC):
     @abstractmethod
     def crawl(self, url: str, **kwargs) -> str:
@@ -49,24 +44,6 @@ class CrawlerStrategy(ABC):
     @abstractmethod
     def update_user_agent(self, user_agent: str):
         pass
-
-class CloudCrawlerStrategy(CrawlerStrategy):
-    def __init__(self, use_cached_html = False):
-        super().__init__()
-        self.use_cached_html = use_cached_html
-        
-    def crawl(self, url: str) -> str:
-        data = {
-            "urls": [url],
-            "include_raw_html": True,
-            "forced": True,
-            "extract_blocks": False,
-        }
-
-        response = requests.post("http://crawl4ai.uccode.io/crawl", json=data)
-        response = response.json()
-        html = response["results"][0]["html"]
-        return html
 
 class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
     def __init__(self, use_cached_html=False, js_code=None, **kwargs):

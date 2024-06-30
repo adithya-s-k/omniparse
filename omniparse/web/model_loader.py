@@ -1,6 +1,7 @@
+import os
 from functools import lru_cache
 from pathlib import Path
-import subprocess, os
+import subprocess
 import shutil
 import tarfile
 from .config import MODEL_REPO_BRANCH
@@ -55,7 +56,7 @@ def set_model_device(model):
 
 @lru_cache()
 def get_home_folder():
-    home_folder = os.path.join(Path.home(), ".crawl4ai")
+    home_folder = os.path.join(Path.home(), ".omniparse")
     os.makedirs(home_folder, exist_ok=True)
     os.makedirs(f"{home_folder}/cache", exist_ok=True)
     os.makedirs(f"{home_folder}/models", exist_ok=True)
@@ -81,7 +82,7 @@ def load_bge_small_en_v1_5():
 
 @lru_cache()
 def load_onnx_all_MiniLM_l6_v2():
-    from crawl4ai.onnx_embedding import DefaultEmbeddingModel
+    from omniparse.web.onnx_embedding import DefaultEmbeddingModel
 
     model_path = "models/onnx.tar.gz"
     model_url = "https://unclecode-files.s3.us-west-2.amazonaws.com/onnx.tar.gz"
@@ -147,7 +148,7 @@ def load_text_multilabel_classifier():
     elif torch.backends.mps.is_available():
         device = torch.device("mps")
     else:
-        return load_spacy_model(), torch.device("cpu")
+        return torch.device("cpu")
 
 
     MODEL = "cardiffnlp/tweet-topic-21-multi"
@@ -187,59 +188,8 @@ def load_nltk_punkt():
     return nltk.data.find('tokenizers/punkt')
 
 
-@lru_cache()
-def load_spacy_model():
-    import spacy
-    name = "models/reuters"
-    home_folder = get_home_folder()
-    model_folder = os.path.join(home_folder, name)
-    
-    # Check if the model directory already exists
-    if not (Path(model_folder).exists() and any(Path(model_folder).iterdir())):
-        repo_url = "https://github.com/unclecode/crawl4ai.git"
-        # branch = "main"
-        branch = MODEL_REPO_BRANCH 
-        repo_folder = os.path.join(home_folder, "crawl4ai")
-        model_folder = os.path.join(home_folder, name)
-
-        # print("[LOG] ⏬ Downloading Spacy model for the first time...")
-
-        # Remove existing repo folder if it exists
-        if Path(repo_folder).exists():
-            shutil.rmtree(repo_folder)
-            shutil.rmtree(model_folder)
-
-        try:
-            # Clone the repository
-            subprocess.run(
-                ["git", "clone", "-b", branch, repo_url, repo_folder],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                check=True
-            )
-
-            # Create the models directory if it doesn't exist
-            models_folder = os.path.join(home_folder, "models")
-            os.makedirs(models_folder, exist_ok=True)
-
-            # Copy the reuters model folder to the models directory
-            source_folder = os.path.join(repo_folder, "models/reuters")
-            shutil.copytree(source_folder, model_folder)
-
-            # Remove the cloned repository
-            shutil.rmtree(repo_folder)
-
-            # Print completion message
-            # print("[LOG] ✅ Spacy Model downloaded successfully")
-        except subprocess.CalledProcessError as e:
-            print(f"An error occurred while cloning the repository: {e}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
-
-    return spacy.load(model_folder)
-
 def download_all_models(remove_existing=False):
-    """Download all models required for Crawl4AI."""
+    """Download all models required for OmniParse."""
     if remove_existing:
         print("[LOG] Removing existing models...")
         home_folder = get_home_folder()
@@ -267,9 +217,7 @@ def download_all_models(remove_existing=False):
     print("[LOG] ✅ All models downloaded successfully.")
 
 def main():
-    print("[LOG] Welcome to the Crawl4AI Model Downloader!")
-    print("[LOG] This script will download all the models required for Crawl4AI.")
-    parser = argparse.ArgumentParser(description="Crawl4AI Model Downloader")
+    parser = argparse.ArgumentParser(description="OmniParse Web Model loader")
     parser.add_argument('--remove-existing', action='store_true', help="Remove existing models before downloading")
     args = parser.parse_args()
     
