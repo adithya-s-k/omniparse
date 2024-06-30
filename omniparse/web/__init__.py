@@ -1,9 +1,6 @@
-from .web_crawler import WebCrawler
-
 import asyncio
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from fastapi.responses import JSONResponse
 from omniparse.web.utils import import_strategy
 
 async def parse_url(url: str , model_state) -> dict:
@@ -12,21 +9,13 @@ async def parse_url(url: str , model_state) -> dict:
         
         # Hardcoded parameters (adjust as needed)
         include_raw_html = False
-        bypass_cache = False
-        extract_blocks = True
+        bypass_cache = True
         word_count_threshold = 5
-        extraction_strategy = "NoExtractionStrategy"
-        extraction_strategy_args = {"verbose": True}
-        chunking_strategy = "RegexChunking"
-        chunking_strategy_args = {"verbose": True}
         css_selector = None
         screenshot = True
         user_agent = None
         verbose = True
         
-        extraction_strategy = import_strategy("omniparse.web.extraction_strategy", extraction_strategy, **extraction_strategy_args)
-        chunking_strategy = import_strategy("omniparse.web.chunking_strategy", chunking_strategy, **chunking_strategy_args)
-
         # Use ThreadPoolExecutor to run the synchronous WebCrawler in async manner
         logging.debug("[LOG] Running the WebCrawler...")
         with ThreadPoolExecutor() as executor:
@@ -36,8 +25,6 @@ async def parse_url(url: str , model_state) -> dict:
                 model_state.crawler.run,
                 str(url),
                 word_count_threshold,
-                extraction_strategy,
-                chunking_strategy,
                 bypass_cache,
                 css_selector,
                 screenshot,
