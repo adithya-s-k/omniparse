@@ -46,6 +46,7 @@ timm = "^1.0.7"
 flash-attn = "^2.5.9"
 art = "^6.2"
 gradio = "^4.37.1"
+nltk = "^3.8.1"
 
 [tool.poetry.scripts]
 omniparse = "server:main"
