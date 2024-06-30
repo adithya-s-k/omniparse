@@ -1,26 +1,22 @@
-import os, time
+import os
+import time
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-from pathlib import Path
-
-from omniparse.web.models import UrlModel, CrawlResult
-from omniparse.web.utils import *
-from omniparse.web.chunking_strategy import *
-from omniparse.web.extraction_strategy import *
-from omniparse.web.crawler_strategy import *
+from omniparse.web.models import UrlModel
+from omniparse.web.utils import get_content_of_website, extract_metadata , InvalidCSSSelectorError
+from omniparse.web.crawler_strategy import CrawlerStrategy,LocalSeleniumCrawlerStrategy
 from typing import List
 from concurrent.futures import ThreadPoolExecutor
-from omniparse.web.config import *
+from omniparse.web.config import DEFAULT_PROVIDER,MIN_WORD_THRESHOLD
+from omniparse.models import responseDocument
 
 
 class WebCrawler:
     def __init__(
         self,
-        # db_path: str = None,
         crawler_strategy: CrawlerStrategy = None,
         always_by_pass_cache: bool = True,
         verbose: bool = False,
     ):
-        # self.db_path = db_path
         self.crawler_strategy = crawler_strategy or LocalSeleniumCrawlerStrategy(verbose=verbose)
         self.always_by_pass_cache = always_by_pass_cache
         self.ready = False
@@ -30,10 +26,10 @@ class WebCrawler:
         result = self.run(
             url='https://adithyask.com',
             word_count_threshold=5,
-            extraction_strategy= NoExtractionStrategy(),
             bypass_cache=True,
             verbose = False
         )
+        print(result)
         self.ready = True
         print("[LOG]  WebCrawler is ready to crawl")
         
@@ -47,15 +43,11 @@ class WebCrawler:
         css_selector: str = None,
         screenshot: bool = False,
         use_cached_html: bool = False,
-        extraction_strategy: ExtractionStrategy = None,
-        chunking_strategy: ChunkingStrategy = RegexChunking(),
         **kwargs,
-    ) -> CrawlResult:
+    ) -> responseDocument:
         return self.run(
             url_model.url,
             word_count_threshold,
-            extraction_strategy or NoExtractionStrategy(),
-            chunking_strategy,
             bypass_cache=url_model.forced,
             css_selector=css_selector,
             screenshot=screenshot,
@@ -73,11 +65,8 @@ class WebCrawler:
         use_cached_html: bool = False,
         css_selector: str = None,
         screenshot: bool = False,
-        extraction_strategy: ExtractionStrategy = None,
-        chunking_strategy: ChunkingStrategy = RegexChunking(),
         **kwargs,
-    ) -> List[CrawlResult]:
-        extraction_strategy = extraction_strategy or NoExtractionStrategy()
+    ) -> List[responseDocument]:
         def fetch_page_wrapper(url_model, *args, **kwargs):
             return self.fetch_page(url_model, *args, **kwargs)
 
@@ -93,8 +82,6 @@ class WebCrawler:
                     [css_selector] * len(url_models),
                     [screenshot] * len(url_models),
                     [use_cached_html] * len(url_models),
-                    [extraction_strategy] * len(url_models),
-                    [chunking_strategy] * len(url_models),
                     *[kwargs] * len(url_models),
                 )
             )
@@ -105,24 +92,15 @@ class WebCrawler:
             self,
             url: str,
             word_count_threshold=MIN_WORD_THRESHOLD,
-            extraction_strategy: ExtractionStrategy = None,
-            chunking_strategy: ChunkingStrategy = RegexChunking(),
             bypass_cache: bool = False,
             css_selector: str = None,
             screenshot: bool = False,
             user_agent: str = None,
             verbose=True,
             **kwargs,
-        ) -> CrawlResult:
+        ) -> responseDocument:
             extracted_content = None
             cached=None
-            extraction_strategy = extraction_strategy or NoExtractionStrategy()
-            extraction_strategy.verbose = verbose
-            if not isinstance(extraction_strategy, ExtractionStrategy):
-                raise ValueError("Unsupported extraction strategy")
-            if not isinstance(chunking_strategy, ChunkingStrategy):
-                raise ValueError("Unsupported chunking strategy")
-            
             if word_count_threshold < MIN_WORD_THRESHOLD:
                 word_count_threshold = MIN_WORD_THRESHOLD
             
@@ -133,7 +111,15 @@ class WebCrawler:
                 if screenshot:
                     screenshot = self.crawler_strategy.take_screenshot()
             
-            return self.process_html(url, html, extracted_content, word_count_threshold, extraction_strategy, chunking_strategy, css_selector, screenshot, verbose, bool(cached), **kwargs)
+            processed_html = self.process_html(url, html, extracted_content, word_count_threshold, css_selector, screenshot, verbose, bool(cached), **kwargs)
+            
+            crawl_result = responseDocument(
+                text=processed_html["markdown"],
+                metadata=processed_html
+            )
+            crawl_result.add_image("screenshot", image_data=processed_html["screenshot"])
+            return crawl_result
+            
 
     def process_html(
             self,
@@ -141,14 +127,12 @@ class WebCrawler:
             html: str,
             extracted_content: str,
             word_count_threshold: int,
-            extraction_strategy: ExtractionStrategy,
-            chunking_strategy: ChunkingStrategy,
             css_selector: str,
             screenshot: bool,
             verbose: bool,
             is_cached: bool,
             **kwargs,
-        ) -> CrawlResult:
+        ):
             t = time.time()
             # Extract content from HTML
             try:
@@ -165,31 +149,20 @@ class WebCrawler:
             links = result.get("links", [])
 
             if verbose:
-                print(f"[LOG]  Crawling done for {url}, success: True, time taken: {time.time() - t} seconds")
-                        
-            if extracted_content is None:
-                if verbose:
-                    print(f"[LOG]  Extracting semantic blocks for {url}, Strategy: {extraction_strategy.name}")
-
-                sections = chunking_strategy.chunk(markdown)
-                extracted_content = extraction_strategy.run(url, sections)
-                extracted_content = json.dumps(extracted_content)
-
-                if verbose:
-                    print(f"[LOG]  Extraction done for {url}, time taken: {time.time() - t} seconds.")
+                print(f"[LOG]  Crawling done for {url}, success: True, time taken: {time.time() - t} seconds")                        
                 
             screenshot = None if not screenshot else screenshot          
-
-            return CrawlResult(
-                url=url,
-                html=html,
-                cleaned_html=cleaned_html,
-                markdown=markdown,
-                media=media,
-                links=links,
-                metadata=metadata,
-                screenshot=screenshot,
-                extracted_content=extracted_content,
-                success=True,
-                error_message="",
-            )
+            
+            return {
+                "url": url,
+                "html": html,
+                "cleaned_html": cleaned_html,
+                "markdown": markdown,
+                "media": media,
+                "links": links,
+                "metadata": metadata,
+                "screenshot": screenshot,
+                "extracted_content": extracted_content,
+                "success": True,
+                "error_message": "",
+            }

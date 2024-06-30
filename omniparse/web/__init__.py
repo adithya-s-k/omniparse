@@ -1,12 +1,11 @@
 import asyncio
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from omniparse.web.utils import import_strategy
+from omniparse.models import responseDocument
 
 async def parse_url(url: str , model_state) -> dict:
     try:
         logging.debug("[LOG] Loading extraction and chunking strategies...")
-        
         # Hardcoded parameters (adjust as needed)
         include_raw_html = False
         bypass_cache = True
@@ -33,11 +32,7 @@ async def parse_url(url: str , model_state) -> dict:
             )
             result = await future
 
-        # if include_raw_html is False, remove the raw HTML content from the results
-        if not include_raw_html:
-            result.html = None
-
-        return {"message": "Website parsed successfully", "result": result.model_dump()}
+        return result
 
     except Exception as e:
         logging.error(f"[ERROR] Error parsing webpage: {str(e)}")
