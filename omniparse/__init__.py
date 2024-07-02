@@ -1,11 +1,31 @@
+"""
+Title: OmniPrase
+Author: Adithya S Kolavi
+Date: 2024-07-02
+
+This code includes portions of code from the marker repository by VikParuchuri.
+Original repository: https://github.com/VikParuchuri/marker
+
+Original Author: VikParuchuri
+Original Date: 2024-01-15
+
+License: GNU General Public License (GPL) Version 3
+URL: https://github.com/VikParuchuri/marker/blob/master/LICENSE
+
+Description:
+This section of the code was adapted from the marker repository to load all the OCR, layout and reading order detection models. 
+All credits for the original implementation go to VikParuchuri.
+"""
+
 import torch
-from typing import Optional , Any
+from typing import  Any
 from pydantic import BaseModel
 from transformers import AutoProcessor, AutoModelForCausalLM
 import whisper
 from omniparse.utils import print_omniparse_text_art
 from omniparse.web.web_crawler import WebCrawler
-from omniparse.documents.models import load_all_models
+from marker.models import load_all_models
+# from omniparse.documents.models import load_all_models
 
 
 class SharedState(BaseModel):

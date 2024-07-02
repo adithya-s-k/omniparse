@@ -1,3 +1,17 @@
+"""
+Title: OmniPrase
+Author: Adithya S Kolavi
+Date: 2024-07-02
+
+This code includes portions of code from the Florence-2 repository by gokaygokay.
+Original repository: https://huggingface.co/spaces/gokaygokay/Florence-2
+
+Original Author: gokaygokay
+Original Date: 2024-06-30
+
+URL: https://huggingface.co/spaces/gokaygokay/Florence-2
+"""
+
 import io
 import random
 import numpy as np

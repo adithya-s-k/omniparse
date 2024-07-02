@@ -1,12 +1,32 @@
+"""
+Title: OmniPrase
+Author: Adithya S Kolavi
+Date: 2024-07-02
+
+This code includes portions of code from the marker repository by VikParuchuri.
+Original repository: https://github.com/VikParuchuri/marker
+
+Original Author: VikParuchuri
+Original Date: 2024-01-15
+
+License: GNU General Public License (GPL) Version 3
+URL: https://github.com/VikParuchuri/marker/blob/master/LICENSE
+
+Description:
+This section of the code was adapted from the marker repository to enhance text pdf/word/ppt parsing. 
+All credits for the original implementation go to VikParuchuri.
+"""
+
 import os
 import tempfile
 import subprocess
-from omniparse.documents.parse import parse_single_pdf
+# from omniparse.documents.parse import parse_single_pdf
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from omniparse import get_shared_state
 # from omniparse.documents import parse_pdf , parse_ppt , parse_doc
-from omniparse.documents import parse_pdf
+# from omniparse.documents import parse_pdf
+from marker.convert import convert_single_pdf
 from omniparse.utils import encode_images
 from omniparse.models import responseDocument
 
@@ -18,7 +38,14 @@ model_state = get_shared_state()
 async def parse_pdf_endpoint(file: UploadFile = File(...)):
     try:
         file_bytes = await file.read()
-        result : responseDocument = parse_pdf(file_bytes , model_state)
+        full_text, images, out_meta = convert_single_pdf(file_bytes, model_state.model_list)
+        
+        result = responseDocument(
+            text=full_text,
+            metadata=out_meta
+        )
+        encode_images(images,result)
+        # result : responseDocument = convert_single_pdf(file_bytes , model_state.model_list)
     
         return JSONResponse(content=result.model_dump())
 
@@ -43,7 +70,7 @@ async def parse_ppt_endpoint(file: UploadFile = File(...)):
     with open(output_pdf_path, "rb") as pdf_file:
         pdf_bytes = pdf_file.read()
 
-    full_text, images, out_meta = parse_single_pdf(pdf_bytes, model_state.model_list)
+    full_text, images, out_meta = convert_single_pdf(pdf_bytes, model_state.model_list)
 
     os.remove(input_path)
     os.remove(output_pdf_path)
@@ -73,7 +100,7 @@ async def parse_doc_endpoint(file: UploadFile = File(...)):
     with open(output_pdf_path, "rb") as pdf_file:
         pdf_bytes = pdf_file.read()
 
-    full_text, images, out_meta = parse_single_pdf(pdf_bytes, model_state.model_list)
+    full_text, images, out_meta = convert_single_pdf(pdf_bytes, model_state.model_list)
 
     result = responseDocument(
         text=full_text,
@@ -104,7 +131,7 @@ async def parse_any_endpoint(file: UploadFile = File(...)):
         input_path = output_pdf_path
     
     # Common parsing logic
-    full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
+    full_text, images, out_meta = convert_single_pdf(input_path, model_state.model_list)
     
     os.remove(input_path)
     

@@ -1,3 +1,37 @@
+"""
+Title: OmniPrase
+Author: Adithya S Kolavi
+Date: 2024-07-02
+
+This code includes portions of code from the marker repository by VikParuchuri.
+Original repository: https://github.com/VikParuchuri/marker
+
+Original Author: VikParuchuri
+Original Date: 2024-01-15
+
+License: GNU General Public License (GPL) Version 3
+URL: https://github.com/VikParuchuri/marker/blob/master/LICENSE
+
+Description:
+This section of the code was adapted from the marker repository to enhance text image parsing. 
+All credits for the original implementation go to VikParuchuri.
+"""
+
+"""
+Title: OmniPrase
+Author: Adithya S Kolavi
+Date: 2024-07-02
+
+This code includes portions of code from the Florence-2 repository by gokaygokay.
+Original repository: https://huggingface.co/spaces/gokaygokay/Florence-2
+
+Original Author: gokaygokay
+Original Date: 2024-06-30
+
+URL: https://huggingface.co/spaces/gokaygokay/Florence-2
+"""
+
+
 # Media parsing endpoints
 import io
 import os
@@ -5,7 +39,7 @@ import tempfile
 import img2pdf
 from PIL import Image
 # from omniparse.document.parse import parse_single_image
-from omniparse.documents.parse import parse_single_pdf
+from marker.convert import convert_single_pdf
 from omniparse.image.process import process_image_task
 from omniparse.utils import encode_images
 from omniparse.models import responseDocument
@@ -44,7 +78,7 @@ def parse_image(input_data, model_state) -> dict:
                 temp_files.append(temp_pdf_path)
 
         # Parse the PDF file
-        full_text, images, out_meta = parse_single_pdf(temp_pdf_path, model_state.model_list)
+        full_text, images, out_meta = convert_single_pdf(temp_pdf_path, model_state.model_list)
         
         parse_image_result = responseDocument(
             text=full_text,

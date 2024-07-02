@@ -1,4 +1,23 @@
             
+"""
+Title: OmniParse
+Author: Adithya S K
+Date: 2024-07-02
+
+This code includes portions of code from the CLIP repository by OpenAI.
+Original repository: https://github.com/openai/CLIP
+
+Original Author: OpenAI
+Original Date: 2021-01-05
+
+License: MIT License
+URL: https://github.com/openai/CLIP/blob/main/LICENSE
+
+Description:
+This section of the code was adapted from the CLIP repository to integrate audioprocessing capabilities into the OmniParse platform. 
+All credits for the original implementation go to OpenAI.
+"""
+
 import os
 import tempfile
 from fastapi import UploadFile

@@ -1,3 +1,17 @@
+"""
+Title: OmniParse
+Author: Adithya S K
+Date: 2024-07-02
+
+This code includes portions of code from the crawl4ai repository by unclecode, licensed under the Apache 2.0 License.
+Original repository: https://github.com/unclecode/crawl4ai
+
+Original Author: unclecode
+
+License: Apache 2.0 License
+URL: https://github.com/unclecode/crawl4ai/blob/main/LICENSE
+"""
+
 PROMPT_EXTRACT_BLOCKS = """YHere is the URL of the webpage:
 <url>{URL}</url>
 

@@ -1,7 +1,27 @@
+"""
+Title: OmniPrase
+Author: Adithya S Kolavi
+Date: 2024-07-02
+
+This code includes portions of code from the marker repository by VikParuchuri.
+Original repository: https://github.com/VikParuchuri/marker
+
+Original Author: VikParuchuri
+Original Date: 2024-01-15
+
+License: GNU General Public License (GPL) Version 3
+URL: https://github.com/VikParuchuri/marker/blob/master/LICENSE
+
+Description:
+This section of the code was adapted from the marker repository to enhance text pdf/word/ppt parsing. 
+All credits for the original implementation go to VikParuchuri.
+"""
+
 import os
 import tempfile
 import subprocess
-from omniparse.documents.parse import parse_single_pdf
+# from omniparse.documents.parse import parse_single_pdf
+from marker.convert import convert_single_pdf
 from omniparse.utils import encode_images
 from omniparse.models import responseDocument
 # Function to handle PDF parsing
@@ -22,7 +42,7 @@ def parse_pdf(input_data , model_state) -> responseDocument:
         else:
             raise ValueError("Invalid input data format. Expected bytes or PDF file path.")
 
-        full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
+        full_text, images, out_meta = convert_single_pdf(input_path, model_state.model_list)
         
         parse_pdf_result = responseDocument(
             text=full_text,
@@ -61,7 +81,7 @@ def parse_ppt(input_data ,model_state) -> responseDocument:
             output_pdf_path = os.path.join(output_dir, os.path.splitext(os.path.basename(input_path))[0] + ".pdf")
             input_path = output_pdf_path
         
-        full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
+        full_text, images, out_meta = convert_single_pdf(input_path, model_state.model_list)
         images = encode_images(images)
         
         parse_ppt_result = responseDocument(
@@ -99,7 +119,7 @@ def parse_doc(input_data ,model_state) -> responseDocument:
             output_pdf_path = os.path.join(output_dir, os.path.splitext(os.path.basename(input_path))[0] + ".pdf")
             input_path = output_pdf_path
         
-        full_text, images, out_meta = parse_single_pdf(input_path, model_state.model_list)
+        full_text, images, out_meta = convert_single_pdf(input_path, model_state.model_list)
         images = encode_images(images)
         
         parse_doc_result = responseDocument(
