@@ -1,10 +1,10 @@
 import os
 import httpx
 import base64
-import requests
 import aiofiles
 from typing import Optional
 from .utils import save_images_and_markdown, ParsedDocument
+
 
 class OmniParse:
     def __init__(self, api_key=None, base_url="http://localhost:8000"):
@@ -19,12 +19,12 @@ class OmniParse:
 
         # Prepare the files for the request
         for pdf_file_path in pdf_file_paths:
-            with open(pdf_file_path, 'rb') as f:
+            with open(pdf_file_path, "rb") as f:
                 pdf_content = f.read()
-            files.append(('pdf_files', (os.path.basename(pdf_file_path), pdf_content, 'application/pdf')))
+            files.append(("pdf_files", (os.path.basename(pdf_file_path), pdf_content, "application/pdf")))
 
         # Send request to FastAPI server with all PDF files attached
-        response = requests.post(self.base_url, files=files)
+        response = httpx.post(self.base_url, files=files)
 
         # Check if request was successful
         if response.status_code == 200:
@@ -41,20 +41,20 @@ class AsyncOmniParse:
     """
     An asynchronous client for interacting with the OmniParse server.
 
-    OmniParse is a platform that ingests and parses unstructured data into structured, 
-    actionable data optimized for GenAI (LLM) applications. This client provides methods 
-    to interact with the OmniParse server, allowing users to parse various types of 
+    OmniParse is a platform that ingests and parses unstructured data into structured,
+    actionable data optimized for GenAI (LLM) applications. This client provides methods
+    to interact with the OmniParse server, allowing users to parse various types of
     unstructured data including documents, images, videos, audio files, and web pages.
 
-    The client supports parsing of multiple file types and provides structured output 
-    in markdown format, making it ideal for AI applications such as RAG (Retrieval-Augmented Generation) 
+    The client supports parsing of multiple file types and provides structured output
+    in markdown format, making it ideal for AI applications such as RAG (Retrieval-Augmented Generation)
     and fine-tuning.
 
     Attributes:
         api_key (str): API key for authentication with the OmniParse server.
         base_url (str): Base URL for the OmniParse API endpoints.
         timeout (int): Timeout for API requests in seconds.
-    
+
     Usage Examples:
         ```python
         # Initialize the client
@@ -92,27 +92,33 @@ class AsyncOmniParse:
         asyncio.run(main())
         ```
     """
+
     def __init__(self, api_key=None, base_url="http://localhost:8000", timeout=120):
         self.api_key = api_key
         self.base_url = base_url
         self.timeout = timeout
-        
+
         self.parse_media_endpoint = "/parse_media"
         self.parse_website_endpoint = "/parse_website"
         self.parse_document_endpoint = "/parse_document"
-        
+
         self.image_process_tasks = {
-            "OCR", "OCR with Region", "Caption", 
-            "Detailed Caption", "More Detailed Caption", 
-            "Object Detection", "Dense Region Caption", "Region Proposal"
+            "OCR",
+            "OCR with Region",
+            "Caption",
+            "Detailed Caption",
+            "More Detailed Caption",
+            "Object Detection",
+            "Dense Region Caption",
+            "Region Proposal",
         }
-        
+
         self.allowed_audio_extentions = {".mp3", ".wav", ".aac"}
         self.allowed_video_extentions = {".mp4", ".mkv", ".avi", ".mov"}
         self.allowed_document_extentions = {".pdf", ".ppt", ".pptx", ".doc", ".docs"}
         self.allowed_image_extentions = {".png", ".jpg", ".jpeg", ".tiff", ".bmp", ".heic"}
-        
-    async def __request__(self, endpoint: str, files: dict = None, json: dict = None) -> dict:
+
+    async def __request__(self, endpoint: str, files: Optional[dict] = None, json: Optional[dict] = None) -> dict:
         """
         Internal method to make API requests.
 
@@ -130,12 +136,12 @@ class AsyncOmniParse:
             response = await client.post(url, files=files, json=json, headers=headers, timeout=self.timeout)
             response.raise_for_status()
             return response.json()
-        
+
     async def parse_document(self, file_path: str, output_folder: Optional[str]) -> ParsedDocument:
         """
         Parse a document file (PDF, PPT, or DOCX) and convert it to structured markdown.
 
-        This method extracts text, tables, and images from the document, providing a 
+        This method extracts text, tables, and images from the document, providing a
         structured output optimized for LLM applications.
 
         Args:
@@ -155,17 +161,20 @@ class AsyncOmniParse:
             confirmation message.
         """
         file_ext = os.path.splitext(file_path)[1].lower()
-        
+
         if file_ext not in self.allowed_document_extentions:
-            raise ValueError(f"Unsupported file type. Only files of format {', '.join(self.allowed_document_extentions)} are allowed.")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+            raise ValueError(
+                f"Unsupported file type. Only files of format {', '.join(self.allowed_document_extentions)} are allowed."
+            )
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        response = await self.__request__(self.parse_document_endpoint, files={'file': file_data})
+        response = await self.__request__(self.parse_document_endpoint, files={"file": file_data})
         data = ParsedDocument(**response, source_path=file_path, output_folder=output_folder)
         if output_folder:
             data.save_data(echo=True)
-    
+        return data
+
     async def parse_pdf(self, file_path: str, output_folder: Optional[str]) -> ParsedDocument:
         """
         Parse a PDF file and convert it to structured markdown.
@@ -189,14 +198,15 @@ class AsyncOmniParse:
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext != ".pdf":
             raise ValueError(f"The file must be a PDF (.pdf), but received a file of type {file_ext}")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        response = await self.__request__(f"{self.parse_document_endpoint}/pdf", files={'file': file_data})
+        response = await self.__request__(f"{self.parse_document_endpoint}/pdf", files={"file": file_data})
         data = ParsedDocument(**response, source_path=file_path, output_folder=output_folder)
         if output_folder:
             data.save_data(echo=True)
-    
+        return data
+
     async def parse_ppt(self, file_path: str, output_folder: Optional[str]) -> ParsedDocument:
         """
         Parse a PowerPoint file and convert it to structured markdown.
@@ -220,14 +230,15 @@ class AsyncOmniParse:
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext not in [".ppt", ".pptx"]:
             raise ValueError(f"The file must be a PPT file (.ppt or .pptx), but received a file of type {file_ext}")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        response = await self.__request__(f"{self.parse_document_endpoint}/ppt", files={'file': file_data})
+        response = await self.__request__(f"{self.parse_document_endpoint}/ppt", files={"file": file_data})
         data = ParsedDocument(**response, source_path=file_path, output_folder=output_folder)
         if output_folder:
             data.save_data(echo=True)
-    
+        return data
+
     async def parse_docs(self, file_path: str, output_folder: Optional[str]) -> ParsedDocument:
         """
         Parse a Word document file and convert it to structured markdown.
@@ -251,19 +262,20 @@ class AsyncOmniParse:
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext not in [".doc", ".docs"]:
             raise ValueError(f"The file must be a DOC file (.doc or .docs), but received a file of type {file_ext}")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        response = await self.__request__(f"{self.parse_document_endpoint}/docs", files={'file': file_data})
+        response = await self.__request__(f"{self.parse_document_endpoint}/docs", files={"file": file_data})
         data = ParsedDocument(**response, source_path=file_path, output_folder=output_folder)
         if output_folder:
             data.save_data(echo=True)
-    
+        return data
+
     async def parse_image(self, file_path: str) -> dict:
         """
         Parse an image file, extracting visual information and generating captions.
 
-        This method can be used for tasks such as object detection, image captioning, 
+        This method can be used for tasks such as object detection, image captioning,
         and text extraction (OCR) from images.
 
         Args:
@@ -277,17 +289,19 @@ class AsyncOmniParse:
         """
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext not in self.allowed_image_extentions:
-            raise ValueError(f"Unsupported file type. Only files of format {', '.join(self.allowed_image_extentions)} are allowed.")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+            raise ValueError(
+                f"Unsupported file type. Only files of format {', '.join(self.allowed_image_extentions)} are allowed."
+            )
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        return await self.__request__(f"{self.parse_media_endpoint}/image", files={'file': file_data})
-    
+        return await self.__request__(f"{self.parse_media_endpoint}/image", files={"file": file_data})
+
     async def parse_video(self, file_path: str) -> dict:
         """
         Parse a video file, extracting key frames, generating captions, and transcribing audio.
 
-        This method provides a structured representation of the video content, including 
+        This method provides a structured representation of the video content, including
         visual and audio information.
 
         Args:
@@ -301,17 +315,19 @@ class AsyncOmniParse:
         """
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext not in self.allowed_video_extentions:
-            raise ValueError(f"Unsupported file type. Only files of format {', '.join(self.allowed_video_extentions)} are allowed.")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+            raise ValueError(
+                f"Unsupported file type. Only files of format {', '.join(self.allowed_video_extentions)} are allowed."
+            )
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        return await self.__request__(f"{self.parse_media_endpoint}/video", files={'file': file_data})
-    
+        return await self.__request__(f"{self.parse_media_endpoint}/video", files={"file": file_data})
+
     async def parse_audio(self, file_path: str) -> dict:
         """
         Parse an audio file, transcribing speech to text.
 
-        This method converts spoken words in the audio file to text, providing a textual 
+        This method converts spoken words in the audio file to text, providing a textual
         representation of the audio content.
 
         Args:
@@ -325,12 +341,14 @@ class AsyncOmniParse:
         """
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext not in self.allowed_audio_extentions:
-            raise ValueError(f"Unsupported file type. Only files of format {', '.join(self.allowed_audio_extentions)} are allowed.")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+            raise ValueError(
+                f"Unsupported file type. Only files of format {', '.join(self.allowed_audio_extentions)} are allowed."
+            )
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        return await self.__request__(f"{self.parse_media_endpoint}/audio", files={'file': file_data})
-    
+        return await self.__request__(f"{self.parse_media_endpoint}/audio", files={"file": file_data})
+
     async def process_image(self, file_path: str, task: str, prompt: Optional[str] = None) -> dict:
         """
         Process an image with a specific task such as OCR, captioning, or object detection.
@@ -352,24 +370,24 @@ class AsyncOmniParse:
             raise ValueError(f"Invalid task. Choose from: {', '.join(self.image_process_tasks)}")
         file_ext = os.path.splitext(file_path)[1].lower()
         if file_ext not in self.allowed_image_extentions:
-            raise ValueError(f"Unsupported file type. Only files of format {', '.join(self.allowed_image_extentions)} are allowed.")
-        
-        async with aiofiles.open(file_path, 'rb') as file:
+            raise ValueError(
+                f"Unsupported file type. Only files of format {', '.join(self.allowed_image_extentions)} are allowed."
+            )
+
+        async with aiofiles.open(file_path, "rb") as file:
             file_data = await file.read()
-        data = {'task': task}
+        data = {"task": task}
         if prompt:
-            data['prompt'] = prompt
+            data["prompt"] = prompt
         return await self.__request__(
-            json = data,
-            files = {'image': file_data}, 
-            endpoint = f"{self.parse_media_endpoint}/process_image"
+            json=data, files={"image": file_data}, endpoint=f"{self.parse_media_endpoint}/process_image"
         )
-    
+
     async def parse_website(self, url: str) -> dict:
         """
         Parse a website, extracting structured content from web pages.
 
-        This method crawls the specified URL, extracting text, images, and other relevant 
+        This method crawls the specified URL, extracting text, images, and other relevant
         content in a structured format.
 
         Args:
@@ -378,5 +396,4 @@ class AsyncOmniParse:
         Returns:
             dict: Parsed website data including extracted text, links, and media references.
         """
-        return await self.__request__(self.parse_website_endpoint, json={'url': url})
-    
+        return await self.__request__(self.parse_website_endpoint, json={"url": url})

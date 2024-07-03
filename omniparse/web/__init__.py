@@ -17,7 +17,8 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 from omniparse.models import responseDocument
 
-async def parse_url(url: str , model_state) -> responseDocument:
+
+async def parse_url(url: str, model_state) -> responseDocument:
     try:
         logging.debug("[LOG] Loading extraction and chunking strategies...")
         # Hardcoded parameters (adjust as needed)
@@ -28,13 +29,13 @@ async def parse_url(url: str , model_state) -> responseDocument:
         screenshot = True
         user_agent = None
         verbose = True
-        
+
         # Use ThreadPoolExecutor to run the synchronous WebCrawler in async manner
         logging.debug("[LOG] Running the WebCrawler...")
         with ThreadPoolExecutor() as executor:
             loop = asyncio.get_event_loop()
             future = loop.run_in_executor(
-                executor, 
+                executor,
                 model_state.crawler.run,
                 str(url),
                 word_count_threshold,
@@ -42,7 +43,7 @@ async def parse_url(url: str , model_state) -> responseDocument:
                 css_selector,
                 screenshot,
                 user_agent,
-                verbose
+                verbose,
             )
             result = await future
 

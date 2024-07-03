@@ -15,9 +15,11 @@ URL: https://github.com/unclecode/crawl4ai/blob/main/LICENSE
 from pydantic import BaseModel, HttpUrl
 from typing import List, Dict, Optional
 
+
 class UrlModel(BaseModel):
     url: HttpUrl
     forced: bool = False
+
 
 class CrawlResult(BaseModel):
     url: str
