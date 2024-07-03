@@ -275,6 +275,12 @@ Arguments:
 
 ## License
 OmniParse is licensed under the GPL-3.0 license. See `LICENSE` for more information.
+The project uses Marker under the hood, which has a commercial license that needs to be followed. Here are the details:
+
+### Commercial Usage
+Marker and Surya OCR Models are designed to be as widely accessible as possible while still funding development and training costs. Research and personal usage are always allowed, but there are some restrictions on commercial usage.
+The weights for the models are licensed under cc-by-nc-sa-4.0. However, this restriction is waived for any organization with less than $5M USD in gross revenue in the most recent 12-month period AND less than $5M in lifetime VC/angel funding raised. To remove the GPL license requirements (dual-license) and/or use the weights commercially over the revenue limit, check out the options provided.
+Please refer to [Marker](https://github.com/VikParuchuri/marker) for more Information about the License of the Model weights
 
 ## Acknowledgements
 
