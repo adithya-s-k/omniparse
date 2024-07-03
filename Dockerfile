@@ -73,7 +73,8 @@ ENV CHROME_BIN=/usr/bin/google-chrome \
 ENV PATH /usr/local/bin:$PATH
 
 # Expose the desired port
-EXPOSE 8000
+ENV PORT=8000
+EXPOSE ${PORT}
 
 # Run the server
-CMD ["python", "server.py", "--host", "0.0.0.0", "--port", "8000", "--documents", "--media", "--web"]
+CMD ["python", "server.py", "--host", "0.0.0.0", "--documents", "--media", "--web"]

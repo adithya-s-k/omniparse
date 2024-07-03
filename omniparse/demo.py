@@ -13,13 +13,7 @@ from io import BytesIO
 import gradio as gr
 # from omniparse.documents import parse_pdf
 
-single_task_list = [
-    "Caption",
-    "Detailed Caption",
-    "More Detailed Caption",
-    "OCR",
-    "OCR with Region",
-]
+single_task_list = ["Caption", "Detailed Caption", "More Detailed Caption", "OCR", "OCR with Region"]
 # single_task_list = [
 #     'Caption', 'Detailed Caption', 'More Detailed Caption',
 #     'OCR', 'OCR with Region',
@@ -175,6 +169,8 @@ parse_document_docs = {
     """,
 }
 
+TIMEOUT = 300  
+
 
 def parse_document(input_file_path, parameters, request: gr.Request):
     # Validate file extension
@@ -193,18 +189,14 @@ def parse_document(input_file_path, parameters, request: gr.Request):
 
         with open(input_file_path, "rb") as f:
             files = {"file": (input_file_path, f, mime_type)}
-            response = httpx.post(
-                post_url, files=files, headers={"accept": "application/json"}
-            )
+            response = httpx.post(post_url, files=files, headers={"accept": "application/json"}, timeout=TIMEOUT)
 
         document_response = response.json()
 
         images = document_response.get("images", [])
 
         # Decode each base64-encoded image to a PIL image
-        pil_images = [
-            decode_base64_to_pil(image_dict["image"]) for image_dict in images
-        ]
+        pil_images = [decode_base64_to_pil(image_dict["image"]) for image_dict in images]
 
         return (
             str(document_response["text"]),
@@ -248,25 +240,21 @@ def process_image(input_file_path, parameters, request: gr.Request):
             mime_type = "application/octet-stream"  # Default MIME type if not found
         with open(input_file_path, "rb") as f:
             # Prepare the files payload
-            files = {
-                "image": (input_file_path, f, mime_type),
-            }
+            files = {"image": (input_file_path, f, mime_type)}
 
             # Prepare the data payload
             data = {"task": parameters}
 
             # Send the POST request
             response = httpx.post(
-                post_url, files=files, data=data, headers={"accept": "application/json"}
+                post_url, files=files, data=data, headers={"accept": "application/json"}, timeout=TIMEOUT
             )
 
         image_process_response = response.json()
 
         images = image_process_response.get("images", [])
         # Decode each base64-encoded image to a PIL image
-        pil_images = [
-            decode_base64_to_pil(image_dict["image"]) for image_dict in images
-        ]
+        pil_images = [decode_base64_to_pil(image_dict["image"]) for image_dict in images]
 
         # Decode the image if present in the response
         # images = document_response.get('image', {})
@@ -313,9 +301,7 @@ def parse_image(input_file_path, parameters, request: gr.Request):
 
         with open(input_file_path, "rb") as f:
             files = {"file": (input_file_path, f, mime_type)}
-            response = httpx.post(
-                post_url, files=files, headers={"accept": "application/json"}
-            )
+            response = httpx.post(post_url, files=files, headers={"accept": "application/json"}, timeout=TIMEOUT)
 
         document_response = response.json()
 
@@ -323,9 +309,7 @@ def parse_image(input_file_path, parameters, request: gr.Request):
         images = document_response.get("images", [])
 
         # Decode each base64-encoded image to a PIL image
-        pil_images = [
-            decode_base64_to_pil(image_dict["image"]) for image_dict in images
-        ]
+        pil_images = [decode_base64_to_pil(image_dict["image"]) for image_dict in images]
 
         return (
             gr.update(value=document_response["text"]),
@@ -376,9 +360,7 @@ def parse_media(input_file_path, parameters, request: gr.Request):
 
         with open(input_file_path, "rb") as f:
             files = {"file": (input_file_path, f, mime_type)}
-            response = httpx.post(
-                post_url, files=files, headers={"accept": "application/json"}
-            )
+            response = httpx.post(post_url, files=files, headers={"accept": "application/json"}, timeout=TIMEOUT)
 
         media_response = response.json()
         # print(media_response["text"])
@@ -414,7 +396,7 @@ def parse_website(url, request: gr.Request):
 
         # Make a POST request to the external URL
         post_url = f"http://{host_url}/parse_website/parse?url={url}"
-        post_response = httpx.post(post_url, headers={"accept": "application/json"})
+        post_response = httpx.post(post_url, headers={"accept": "application/json"}, timeout=TIMEOUT)
 
         # Validate response
         post_response.raise_for_status()
@@ -431,9 +413,7 @@ def parse_website(url, request: gr.Request):
         images = website_response.get("images", [])
 
         # Decode each base64-encoded image to a PIL image
-        pil_images = [
-            decode_base64_to_pil(image_dict["image"]) for image_dict in images
-        ]
+        pil_images = [decode_base64_to_pil(image_dict["image"]) for image_dict in images]
 
         return (
             gr.update(value=markdown, visible=True),
@@ -468,20 +448,11 @@ with demo_ui:
                     )
                     with gr.Accordion("Parameters", visible=True):
                         document_parameter = gr.Dropdown(
-                            [
-                                "Fixed Size Chunking",
-                                "Regex Chunking",
-                                "Semantic Chunking",
-                            ],
-                            label="Chunking Stratergy",
+                            ["Fixed Size Chunking", "Regex Chunking", "Semantic Chunking"], label="Chunking Stratergy"
                         )
                         if document_parameter == "Fixed Size Chunking":
-                            document_chunk_size = gr.Number(
-                                minimum=250, maximum=10000, step=100, show_label=False
-                            )
-                            document_overlap_size = gr.Number(
-                                minimum=250, maximum=1000, step=100, show_label=False
-                            )
+                            document_chunk_size = gr.Number(minimum=250, maximum=10000, step=100, show_label=False)
+                            document_overlap_size = gr.Number(minimum=250, maximum=1000, step=100, show_label=False)
                     document_button = gr.Button("Parse Document")
                 with gr.Column(scale=200):
                     with gr.Accordion("Markdown"):
@@ -493,21 +464,9 @@ with demo_ui:
             with gr.Accordion("JSON Output"):
                 document_json = gr.JSON(label="Output JSON", visible=False)
             with gr.Accordion("Use API", open=True):
-                gr.Code(
-                    language="shell",
-                    value=parse_document_docs["curl"],
-                    lines=1,
-                    label="Curl",
-                )
-                gr.Code(
-                    language="python", value="Coming Soon⌛", lines=1, label="python"
-                )
-                gr.Code(
-                    language="javascript",
-                    value="Coming Soon⌛",
-                    lines=1,
-                    label="Javascript",
-                )
+                gr.Code(language="shell", value=parse_document_docs["curl"], lines=1, label="Curl")
+                gr.Code(language="python", value="Coming Soon⌛", lines=1, label="python")
+                gr.Code(language="javascript", value="Coming Soon⌛", lines=1, label="Javascript")
         with gr.TabItem("Images"):
             with gr.Tabs():
                 with gr.TabItem("Process"):
@@ -521,51 +480,26 @@ with demo_ui:
                                 file_types=[".jpg", ".jpeg", ".png"],
                             )
                             image_process_parameter = gr.Dropdown(
-                                choices=single_task_list,
-                                label="Task Prompt",
-                                value="Caption",
-                                interactive=True,
+                                choices=single_task_list, label="Task Prompt", value="Caption", interactive=True
                             )
                             image_process_button = gr.Button("Process Image")
                         with gr.Column(scale=200):
                             image_process_output_text = gr.Textbox(label="Output Text")
-                            image_process_output_image = gr.Gallery(
-                                label="Output Image ⌛", interactive=False
-                            )
+                            image_process_output_image = gr.Gallery(label="Output Image ⌛", interactive=False)
                     with gr.Accordion("JSON Output"):
                         image_process_json = gr.JSON(label="Output JSON", visible=False)
                     with gr.Accordion("Use API", open=True):
-                        gr.Code(
-                            language="shell",
-                            value=process_image_docs["curl"],
-                            lines=1,
-                            label="Curl",
-                        )
-                        gr.Code(
-                            language="python",
-                            value="Coming Soon⌛",
-                            lines=1,
-                            label="python",
-                        )
-                        gr.Code(
-                            language="javascript",
-                            value="Coming Soon⌛",
-                            lines=1,
-                            label="Javascript",
-                        )
+                        gr.Code(language="shell", value=process_image_docs["curl"], lines=1, label="Curl")
+                        gr.Code(language="python", value="Coming Soon⌛", lines=1, label="python")
+                        gr.Code(language="javascript", value="Coming Soon⌛", lines=1, label="Javascript")
                 with gr.TabItem("Parse"):
                     with gr.Row():
                         with gr.Column(scale=80):
                             image_parse_file = gr.File(
-                                label="Upload Image",
-                                type="filepath",
-                                file_count="single",
-                                interactive=True,
+                                label="Upload Image", type="filepath", file_count="single", interactive=True
                             )
                             with gr.Accordion("Parameters", visible=False):
-                                image_parse_parameter = gr.CheckboxGroup(
-                                    ["chunk document"], show_label=False
-                                )
+                                image_parse_parameter = gr.CheckboxGroup(["chunk document"], show_label=False)
                             image_parse_button = gr.Button("Parse Image")
                         with gr.Column(scale=200):
                             with gr.Accordion("Markdown"):
@@ -577,24 +511,9 @@ with demo_ui:
                     with gr.Accordion("JSON Output"):
                         image_parse_json = gr.JSON(label="Output JSON", visible=False)
                     with gr.Accordion("Use API", open=True):
-                        gr.Code(
-                            language="shell",
-                            value=parse_image_docs["curl"],
-                            lines=1,
-                            label="Curl",
-                        )
-                        gr.Code(
-                            language="python",
-                            value="Coming Soon⌛",
-                            lines=1,
-                            label="python",
-                        )
-                        gr.Code(
-                            language="javascript",
-                            value="Coming Soon⌛",
-                            lines=1,
-                            label="Javascript",
-                        )
+                        gr.Code(language="shell", value=parse_image_docs["curl"], lines=1, label="Curl")
+                        gr.Code(language="python", value="Coming Soon⌛", lines=1, label="python")
+                        gr.Code(language="javascript", value="Coming Soon⌛", lines=1, label="Javascript")
         with gr.TabItem("Media"):
             with gr.Row():
                 with gr.Column(scale=80):
@@ -603,20 +522,10 @@ with demo_ui:
                         type="filepath",
                         file_count="single",
                         interactive=True,
-                        file_types=[
-                            ".mp4",
-                            ".mkv",
-                            ".mov",
-                            ".avi",
-                            ".mp3",
-                            ".wav",
-                            ".aac",
-                        ],
+                        file_types=[".mp4", ".mkv", ".mov", ".avi", ".mp3", ".wav", ".aac"],
                     )
                     with gr.Accordion("Parameters", visible=False):
-                        media_parameter = gr.CheckboxGroup(
-                            ["chunk document"], show_label=False
-                        )
+                        media_parameter = gr.CheckboxGroup(["chunk document"], show_label=False)
                     media_button = gr.Button("Parse Media")
                 with gr.Column(scale=200):
                     with gr.Accordion("Markdown"):
@@ -627,30 +536,16 @@ with demo_ui:
             with gr.Accordion("JSON Output"):
                 media_json = gr.JSON(label="Output JSON", visible=False)
             with gr.Accordion("Use API", open=True):
-                gr.Code(
-                    language="shell",
-                    value=parse_media_docs["curl"],
-                    lines=1,
-                    label="Curl",
-                )
-                gr.Code(
-                    language="python", value="Coming Soon⌛", lines=1, label="python"
-                )
-                gr.Code(
-                    language="javascript",
-                    value="Coming Soon⌛",
-                    lines=1,
-                    label="Javascript",
-                )
+                gr.Code(language="shell", value=parse_media_docs["curl"], lines=1, label="Curl")
+                gr.Code(language="python", value="Coming Soon⌛", lines=1, label="python")
+                gr.Code(language="javascript", value="Coming Soon⌛", lines=1, label="Javascript")
         with gr.TabItem("Web"):
             with gr.Tabs():
                 with gr.TabItem("Parse"):
                     with gr.Row():
                         with gr.Column(scale=90):
                             crawl_url = gr.Textbox(
-                                interactive=True,
-                                placeholder="https://adithyask.com ....",
-                                show_label=False,
+                                interactive=True, placeholder="https://adithyask.com ....", show_label=False
                             )
                         with gr.Column(scale=10):
                             crawl_button = gr.Button("➡️ Parse Website")
@@ -663,34 +558,15 @@ with demo_ui:
                     with gr.Accordion("JSON Output"):
                         crawl_json = gr.JSON(label="Output JSON", visible=False)
                     with gr.Accordion("Use API", open=True):
-                        gr.Code(
-                            language="shell",
-                            value=parse_website_docs["curl"],
-                            lines=1,
-                            label="Curl",
-                        )
-                        gr.Code(
-                            language="python",
-                            value="Coming Soon⌛",
-                            lines=1,
-                            label="python",
-                        )
-                        gr.Code(
-                            language="javascript",
-                            value="Coming Soon⌛",
-                            lines=1,
-                            label="Javascript",
-                        )
+                        gr.Code(language="shell", value=parse_website_docs["curl"], lines=1, label="Curl")
+                        gr.Code(language="python", value="Coming Soon⌛", lines=1, label="python")
+                        gr.Code(language="javascript", value="Coming Soon⌛", lines=1, label="Javascript")
                 with gr.TabItem("Crawl ⌛", interactive=False):
                     gr.Markdown("Enter query to search:")
-                    gr.Textbox(
-                        label="Search Query", interactive=False, value="Coming Soon ⌛"
-                    )
+                    gr.Textbox(label="Search Query", interactive=False, value="Coming Soon ⌛")
                 with gr.TabItem("Search ⌛", interactive=False):
                     gr.Markdown("Enter query to search:")
-                    gr.Textbox(
-                        label="Search Query", interactive=False, value="Coming Soon ⌛"
-                    )
+                    gr.Textbox(label="Search Query", interactive=False, value="Coming Soon ⌛")
         gr.Markdown(header_markdown)
 
     document_button.click(
@@ -701,21 +577,12 @@ with demo_ui:
     image_parse_button.click(
         fn=parse_image,
         inputs=[image_parse_file, image_parse_parameter],
-        outputs=[
-            image_parse_markdown,
-            image_parse_images,
-            image_parse_chunks,
-            image_parse_json,
-        ],
+        outputs=[image_parse_markdown, image_parse_images, image_parse_chunks, image_parse_json],
     )
     image_process_button.click(
         fn=process_image,
         inputs=[image_process_file, image_process_parameter],
-        outputs=[
-            image_process_output_text,
-            image_process_output_image,
-            image_process_json,
-        ],
+        outputs=[image_process_output_text, image_process_output_image, image_process_json],
     )
     media_button.click(
         fn=parse_media,
@@ -723,9 +590,7 @@ with demo_ui:
         outputs=[media_markdown, media_images, media_chunks, media_json],
     )
     crawl_button.click(
-        fn=parse_website,
-        inputs=[crawl_url],
-        outputs=[crawl_markdown, crawl_html, crawl_image, crawl_json],
+        fn=parse_website, inputs=[crawl_url], outputs=[crawl_markdown, crawl_html, crawl_image, crawl_json]
     )
 
 
