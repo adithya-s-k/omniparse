@@ -10,12 +10,13 @@
 
 > [!IMPORTANT]
 >
->OmniParse is a platform that ingests and parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applications. Whether working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured, and ready for AI applications, such as RAG, fine-tuning, and more.
-
-
+>OmniParse is a platform that ingests and parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applications. Whether you are working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured, and ready for AI applications such as RAG, fine-tuning, and more
 
 ## Try it out
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/adithya-s-k/omniparse/blob/main/examples/OmniParse_GoogleColab.ipynb)
+
+## Intro
+https://github.com/adithya-s-k/omniparse/assets/27956426/457d8b5b-9573-44da-8bcf-616000651a13
 
 ## Features
 ✅ Completely local, no external APIs  \
@@ -25,14 +26,14 @@
 ✅ Table extraction, image extraction/captioning, audio/video transcription, web page crawling  \
 ✅ Easily deployable using Docker and Skypilot  \
 ✅ Colab friendly  \
-✅ Interative UI powered by Gradio   \
+✅ Interative UI powered by Gradio  
 
-### Problem Statement
+### Why OmniParse ?
 It's challenging to process data as it comes in different shapes and sizes. OmniParse aims to be an ingestion/parsing platform where you can ingest any type of data, such as documents, images, audio, video, and web content, and get the most structured and actionable output that is GenAI (LLM) friendly.
 
 ## Installation
-> Note: The server only works on Linux-based systems. This is due to certain dependencies and system-specific configurations that are not compatible with Windows or macOS.
-To install OmniParse, you can use `pip`:
+> [!IMPORTANT] 
+> The server only works on Linux-based systems. This is due to certain dependencies and system-specific configurations that are not compatible with Windows or macOS.
 
 ```bash
 git clone https://github.com/adithya-s-k/omniparse
@@ -42,7 +43,7 @@ cd omniparse
 Create a Virtual Environment:
 
 ```bash
-conda create --name omniparse-venv python=3.10
+conda create --n omniparse-venv python=3.10
 conda activate omniparse-venv
 ```
 
@@ -52,6 +53,8 @@ Install Dependencies:
 poetry install
 # or
 pip install -e .
+# or
+pip install -r pyproject.toml
 ```
 
 ### 🛳️ Docker
@@ -247,7 +250,7 @@ curl -X POST -F "file=@/path/to/audio.mp3" http://localhost:8000/parse_media/aud
 
 #### Parse Website
 
-Endpoint: `/parse_website`
+Endpoint: `/parse_website/parse`
 Method: POST
 
 Parses a website given its URL.
@@ -261,6 +264,7 @@ Arguments:
 
 </details>
 
+
 ## Coming Soon/ RoadMap
 🦙 LlamaIndex | Langchain | Haystack integrations coming soon
 📚 Batch processing data
@@ -272,6 +276,18 @@ Arguments:
 
 **Final goal**: replace all the different models currently being used with a single MultiModel Model to parse any type of data and get the data you need.
 
+
+## Limitations
+There is a need for a GPU with 8~10 GB minimum VRAM as we are using deep learning models.
+\
+Document Parsing Limitations
+\
+[Marker](https://github.com/VikParuchuri/marker) which is the underlying PDF parser will not convert 100% of equations to LaTeX because it has to detect and then convert them.
+Tables are not always formatted 100% correctly; text can be in the wrong column.
+Whitespace and indentations are not always respected.
+Not all lines/spans will be joined properly.
+This works best on digital PDFs that won't require a lot of OCR. It's optimized for speed, and limited OCR is used to fix errors.
+To fit all the models in the GPU, we are using the smallest variants, which might not offer the best-in-class performance.
 
 ## License
 OmniParse is licensed under the GPL-3.0 license. See `LICENSE` for more information.
