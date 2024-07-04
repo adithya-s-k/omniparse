@@ -10,7 +10,7 @@
 
 > [!IMPORTANT]
 >
->OmniParse is a platform that ingests and parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applications. Whether working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured, and ready for AI applications, such as RAG, fine-tuning, and more.
+>OmniParse is a platform that ingests and parses any unstructured data into structured and actionable data optimized for GenAI (LLM) applications. Whether you're working with documents, tables, images, videos, audio files or web pages, OmniParse prepares your data to be clean, structured, and ready for AI applications such as RAG, fine-tuning and more. This makes your data handling much easier and efficient.
 
 
 
