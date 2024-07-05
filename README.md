@@ -95,6 +95,17 @@ python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 - `--media`: Load in Whisper model to transcribe audio and video files.
 - `--web`: Set up selenium crawler.
 
+Download Models:
+If you want to download the models before starting the server
+
+```bash
+python download.py --documents --media --web
+```
+
+- `--documents`: Load in all the models that help you parse and ingest documents (Surya OCR series of models and Florence-2).
+- `--media`: Load in Whisper model to transcribe audio and video files.
+- `--web`: Set up selenium crawler.
+
 ## Supported Data Types
 
 | Type      | Supported Extensions                                |
@@ -280,14 +291,16 @@ Arguments:
 ## Limitations
 There is a need for a GPU with 8~10 GB minimum VRAM as we are using deep learning models.
 \
+
 Document Parsing Limitations
 \
-[Marker](https://github.com/VikParuchuri/marker) which is the underlying PDF parser will not convert 100% of equations to LaTeX because it has to detect and then convert them.
-Tables are not always formatted 100% correctly; text can be in the wrong column.
-Whitespace and indentations are not always respected.
-Not all lines/spans will be joined properly.
-This works best on digital PDFs that won't require a lot of OCR. It's optimized for speed, and limited OCR is used to fix errors.
-To fit all the models in the GPU, we are using the smallest variants, which might not offer the best-in-class performance.
+- [Marker](https://github.com/VikParuchuri/marker) which is the underlying PDF parser will not convert 100% of equations to LaTeX because it has to detect and then convert them.
+- It is good at parsing english but might struggle for languages such as Chinese
+- Tables are not always formatted 100% correctly; text can be in the wrong column.
+- Whitespace and indentations are not always respected.
+- Not all lines/spans will be joined properly.
+- This works best on digital PDFs that won't require a lot of OCR. It's optimized for speed, and limited OCR is used to fix errors.
+- To fit all the models in the GPU, we are using the smallest variants, which might not offer the best-in-class performance.
 
 ## License
 OmniParse is licensed under the GPL-3.0 license. See `LICENSE` for more information.
