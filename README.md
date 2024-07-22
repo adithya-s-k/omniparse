@@ -43,7 +43,7 @@ cd omniparse
 Create a Virtual Environment:
 
 ```bash
-conda create --n omniparse-venv python=3.10
+conda create --name omniparse-venv python=3.10
 conda activate omniparse-venv
 ```
 
