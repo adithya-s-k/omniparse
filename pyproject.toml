@@ -47,7 +47,7 @@ flash-attn = "^2.5.9"
 art = "^6.2"
 gradio = "^4.37.1"
 nltk = "^3.8.1"
-marker-pdf = "^0.2.15"
+marker-pdf = "^0.2.16"
 
 [tool.poetry.scripts]
 omniparse = "server:main"
