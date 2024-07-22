@@ -17,8 +17,7 @@ app = FastAPI()
 
 # io = gr.Interface(lambda x: "Hello, " + x + "!", "textbox", "textbox")
 
-def add(app: FastAPI):
-    app.add_middleware(
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
