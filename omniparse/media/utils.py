@@ -1,4 +1,3 @@
-            
 """
 Title: OmniParse
 Author: Adithya S K
@@ -14,13 +13,14 @@ License: MIT License
 URL: https://github.com/openai/CLIP/blob/main/LICENSE
 
 Description:
-This section of the code was adapted from the CLIP repository to integrate audioprocessing capabilities into the OmniParse platform. 
+This section of the code was adapted from the CLIP repository to integrate audioprocessing capabilities into the OmniParse platform.
 All credits for the original implementation go to OpenAI.
 """
 
 import numpy as np
 
-def transcribe(audio_path: str, whisper_model ,**whisper_args):
+
+def transcribe(audio_path: str, whisper_model, **whisper_args):
     """Transcribe the audio file using whisper"""
 
     # Get whisper model
@@ -29,7 +29,11 @@ def transcribe(audio_path: str, whisper_model ,**whisper_args):
     # Set configs & transcribe
     if whisper_args["temperature_increment_on_fallback"] is not None:
         whisper_args["temperature"] = tuple(
-            np.arange(whisper_args["temperature"], 1.0 + 1e-6, whisper_args["temperature_increment_on_fallback"])
+            np.arange(
+                whisper_args["temperature"],
+                1.0 + 1e-6,
+                whisper_args["temperature_increment_on_fallback"],
+            )
         )
     else:
         whisper_args["temperature"] = [whisper_args["temperature"]]
@@ -42,6 +46,7 @@ def transcribe(audio_path: str, whisper_model ,**whisper_args):
     )
 
     return transcript
+
 
 # function for enabling CORS on web server
 WHISPER_DEFAULT_SETTINGS = {

@@ -34,6 +34,11 @@ RUN apt-get update && \
     && apt-get install -y --no-install-recommends google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
+# Add essential fonts to support Chinese
+RUN apt-get install fonts-noto-cjk fonts-noto-cjk-extra fonts-arphic-ukai fonts-arphic-uming fonts-wqy-microhei fonts-wqy-zenhei \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && fc-cache -fv
+
 # Download and install ChromeDriver
 RUN CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
     wget -N https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -P /tmp && \
@@ -68,7 +73,8 @@ ENV CHROME_BIN=/usr/bin/google-chrome \
 ENV PATH /usr/local/bin:$PATH
 
 # Expose the desired port
-EXPOSE 8000
+ENV PORT=8000
+EXPOSE ${PORT}
 
 # Run the server
-CMD ["python", "server.py", "--host", "0.0.0.0", "--port", "8000", "--documents", "--media", "--web"]
+CMD ["python", "server.py", "--host", "0.0.0.0", "--documents", "--media", "--web"]
