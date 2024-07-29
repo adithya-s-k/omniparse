@@ -11,6 +11,7 @@ Original Author: unclecode
 License: Apache 2.0 License
 URL: https://github.com/unclecode/crawl4ai/blob/main/LICENSE
 """
+
 from abc import ABC, abstractmethod
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -28,35 +29,37 @@ from typing import List
 from pathlib import Path
 from omniparse.web.utils import wrap_text
 
-logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
+logger = logging.getLogger("selenium.webdriver.remote.remote_connection")
 logger.setLevel(logging.WARNING)
 
-logger_driver = logging.getLogger('selenium.webdriver.common.service')
+logger_driver = logging.getLogger("selenium.webdriver.common.service")
 logger_driver.setLevel(logging.WARNING)
 
-urllib3_logger = logging.getLogger('urllib3.connectionpool')
+urllib3_logger = logging.getLogger("urllib3.connectionpool")
 urllib3_logger.setLevel(logging.WARNING)
 
 # Disable http.client logging
-http_client_logger = logging.getLogger('http.client')
+http_client_logger = logging.getLogger("http.client")
 http_client_logger.setLevel(logging.WARNING)
 
 # Disable driver_finder and service logging
-driver_finder_logger = logging.getLogger('selenium.webdriver.common.driver_finder')
+driver_finder_logger = logging.getLogger("selenium.webdriver.common.driver_finder")
 driver_finder_logger.setLevel(logging.WARNING)
+
 
 class CrawlerStrategy(ABC):
     @abstractmethod
     def crawl(self, url: str, **kwargs) -> str:
         pass
-    
+
     @abstractmethod
     def take_screenshot(self, save_path: str):
         pass
-    
+
     @abstractmethod
     def update_user_agent(self, user_agent: str):
         pass
+
 
 class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
     def __init__(self, use_cached_html=False, js_code=None, **kwargs):
@@ -106,25 +109,29 @@ class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_all_elements_located((By.TAG_NAME, "html"))
             )
-            
+
             # Execute JS code if provided
             if self.js_code and type(self.js_code) == str:
                 self.driver.execute_script(self.js_code)
                 # Optionally, wait for some condition after executing the JS code
                 WebDriverWait(self.driver, 10).until(
-                    lambda driver: driver.execute_script("return document.readyState") == "complete"
+                    lambda driver: driver.execute_script("return document.readyState")
+                    == "complete"
                 )
             elif self.js_code and type(self.js_code) == list:
                 for js in self.js_code:
                     self.driver.execute_script(js)
                     WebDriverWait(self.driver, 10).until(
-                        lambda driver: driver.execute_script("return document.readyState") == "complete"
+                        lambda driver: driver.execute_script(
+                            "return document.readyState"
+                        )
+                        == "complete"
                     )
-            
+
             html = self.driver.page_source
             if self.verbose:
                 print(f"[LOG] ✅ Crawled {url} successfully!")
-            
+
             return html
         except InvalidArgumentException:
             raise InvalidArgumentException(f"Invalid URL {url}")
@@ -135,7 +142,9 @@ class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
         try:
             # Get the dimensions of the page
             total_width = self.driver.execute_script("return document.body.scrollWidth")
-            total_height = self.driver.execute_script("return document.body.scrollHeight")
+            total_height = self.driver.execute_script(
+                "return document.body.scrollHeight"
+            )
 
             # Set the window size to the dimensions of the page
             self.driver.set_window_size(total_width, total_height)
@@ -149,7 +158,7 @@ class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
             # Convert to JPEG and compress
             buffered = BytesIO()
             image.save(buffered, format="JPEG", quality=85)
-            img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+            img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
             if self.verbose:
                 print(f"[LOG] 📸 Screenshot taken and converted to base64")
@@ -161,9 +170,9 @@ class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
             print(error_message)
 
             # Generate an image with black background
-            img = Image.new('RGB', (800, 600), color='black')
+            img = Image.new("RGB", (800, 600), color="black")
             draw = ImageDraw.Draw(img)
-            
+
             # Load a font
             try:
                 font = ImageFont.truetype("arial.ttf", 40)
@@ -177,14 +186,14 @@ class LocalSeleniumCrawlerStrategy(CrawlerStrategy):
 
             # Calculate text position
             text_position = (10, 10)
-            
+
             # Draw the text on the image
             draw.text(text_position, wrapped_text, fill=text_color, font=font)
-            
+
             # Convert to base64
             buffered = BytesIO()
             img.save(buffered, format="JPEG")
-            img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+            img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
             return img_base64
 

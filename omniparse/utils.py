@@ -3,7 +3,8 @@ import os
 from art import text2art
 from omniparse.models import responseDocument
 
-def encode_images(images, inputDocument:responseDocument):
+
+def encode_images(images, inputDocument: responseDocument):
     for i, (filename, image) in enumerate(images.items()):
         # print(f"Processing image {filename}")
         # Save image as PNG
@@ -12,10 +13,10 @@ def encode_images(images, inputDocument:responseDocument):
         with open(filename, "rb") as f:
             image_bytes = f.read()
         # Convert image to base64
-        image_base64 = base64.b64encode(image_bytes).decode('utf-8')
-        
-        inputDocument.add_image(image_name=filename,image_data=image_base64)
-        
+        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+
+        inputDocument.add_image(image_name=filename, image_data=image_base64)
+
         # Remove the temporary image file
         os.remove(filename)
 
