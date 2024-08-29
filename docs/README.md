@@ -21,7 +21,7 @@ layout:
 
 &#x20;[![GitHub Stars](https://img.shields.io/github/stars/adithya-s-k/omniparse?style=social)](https://github.com/adithya-s-k/omniparse/stargazers) [![GitHub Forks](https://img.shields.io/github/forks/adithya-s-k/omniparse?style=social)](https://github.com/adithya-s-k/omniparse/network/members) [![GitHub Issues](https://img.shields.io/github/issues/adithya-s-k/omniparse)](https://github.com/adithya-s-k/omniparse/issues) [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/adithya-s-k/omniparse)](https://github.com/adithya-s-k/omniparse/pulls) [![License](https://img.shields.io/github/license/adithya-s-k/omniparse)](../LICENSE)
 
-> **OmniParse is a platform that ingests/parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applcaitons. Whether working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured and ready for AI applications, such as RAG , fine-tuning and more.**
+> **OmniParse is a platform that ingests/parses any unstructured data into structured, actionable data optimized for GenAI (LLM) applications. Whether working with documents, tables, images, videos, audio files, or web pages, OmniParse prepares your data to be clean, structured and ready for AI applications, such as RAG , fine-tuning and more.**
 
 ### Try it out
 
