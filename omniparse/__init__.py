@@ -27,6 +27,8 @@ from omniparse.web.web_crawler import WebCrawler
 from marker.models import load_all_models
 # from omniparse.documents.models import load_all_models
 
+import os
+
 
 class SharedState(BaseModel):
     model_list: Any = None

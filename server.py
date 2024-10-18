@@ -37,6 +37,8 @@ app.include_router(media_router, prefix="/parse_media", tags=["Media"])
 app.include_router(website_router, prefix="/parse_website", tags=["Website"])
 app = gr.mount_gradio_app(app, demo_ui, path="")
 
+import os
+os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 
 def main():
     # Parse command-line arguments
