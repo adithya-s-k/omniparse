@@ -1,6 +1,6 @@
 # OmniParse
 
-![OmniParse](https://raw.githubusercontent.com/adithya-s-k/omniparse/main/docs/assets/hero_image.png)
+![OmniParse](https://raw.githubusercontent.com/adithya-s-k/omniparse/main/docs/assets/hero_image_2.png)
 [![GitHub Stars](https://img.shields.io/github/stars/adithya-s-k/omniparse?style=social)](https://github.com/adithya-s-k/omniparse/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/adithya-s-k/omniparse?style=social)](https://github.com/adithya-s-k/omniparse/network/members)
 [![GitHub Issues](https://img.shields.io/github/issues/adithya-s-k/omniparse)](https://github.com/adithya-s-k/omniparse/issues)
