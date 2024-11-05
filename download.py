@@ -5,6 +5,7 @@ Script to download models
 import argparse
 from omniparse import load_omnimodel
 
+os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 
 def download_models():
     parser = argparse.ArgumentParser(description="Download models for omniparse")

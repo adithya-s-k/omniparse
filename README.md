@@ -55,6 +55,8 @@ poetry install
 pip install -e .
 # or
 pip install -r pyproject.toml
+# or
+pip install -r requirements.txt
 ```
 
 ### 🛳️ Docker
