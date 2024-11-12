@@ -1,0 +1,80 @@
+language: en-US
+enable_free_tier: true
+
+reviews:
+  profile: "assertive"  # More detailed feedback for data processing code
+  request_changes_workflow: true
+  high_level_summary: true
+  review_status: true
+  commit_status: true
+  sequence_diagrams: true
+  changed_files_summary: true
+
+  labeling_instructions:
+    - label: "data-processing"
+      instructions: "Changes related to data ingestion, parsing, or transformation logic"
+    - label: "documentation"
+      instructions: "Changes to documentation, README, or inline code comments"
+    - label: "dependencies"
+      instructions: "Changes to project dependencies or requirements"
+
+  path_instructions:
+    - path: "**/*.py"
+      instructions: |
+        Check for:
+        - Type hints and return types for all functions
+        - Error handling for data processing edge cases
+        - Memory efficiency in data transformations
+        - Input validation
+        - Performance considerations for large datasets
+        - Documentation for public APIs
+    - path: "**/*.md"
+      instructions: |
+        Verify:
+        - Clear API documentation
+        - Usage examples
+        - Installation instructions
+        - Consistent formatting
+    - path: "**/tests/**"
+      instructions: |
+        Ensure:
+        - Test coverage for edge cases
+        - Clear test descriptions
+        - Proper test data setup
+
+  auto_review:
+    enabled: true
+    drafts: false
+    auto_incremental_review: true
+    ignore_title_keywords:
+      - "WIP"
+      - "DO NOT MERGE"
+      - "[DRAFT]"
+
+  tools:
+    ruff:
+      enabled: true
+
+    markdownlint:
+      enabled: true
+
+    gitleaks:
+      enabled: true
+
+    semgrep:
+      enabled: true
+
+    github-checks:
+      enabled: true
+      timeout_ms: 90000
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  pull_requests:
+    scope: "local"
+  issues:
+    scope: "local"
+  learnings:
+    scope: "local"
