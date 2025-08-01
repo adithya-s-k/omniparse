@@ -1,24 +1,24 @@
 import base64
+import tempfile
 import os
 from art import text2art
 from omniparse.models import responseDocument
 
 
-def encode_images(images, inputDocument: responseDocument):
-    for i, (filename, image) in enumerate(images.items()):
-        # print(f"Processing image {filename}")
-        # Save image as PNG
-        image.save(filename, "PNG")
-        # Read the saved image file as bytes
-        with open(filename, "rb") as f:
-            image_bytes = f.read()
-        # Convert image to base64
-        image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+def encode_images(document_name, document, inputDocument: responseDocument):
+    file_name = os.path.splitext(document_name)[0]
+    for idx, image in enumerate(document.pictures):
+        with tempfile.NamedTemporaryFile(delete=True, suffix=".png") as tmp_file:
+            filename = tmp_file.name
+            image.get_image(document).save(filename, "PNG")
+            with open(filename, "rb") as f:
+                image_bytes = f.read()
 
-        inputDocument.add_image(image_name=filename, image_data=image_base64)
-
-        # Remove the temporary image file
-        os.remove(filename)
+            # Convert image to base64
+            image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+            inputDocument.add_image(
+                image_name=f"{file_name}_image_{idx}", image_data=image_base64
+            )
 
 
 def print_omniparse_text_art(suffix=None):

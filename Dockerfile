@@ -46,7 +46,7 @@ RUN CHROMEDRIVER_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_R
 # COPY --from=builder /usr/local/bin/chromedriver /usr/local/bin/chromedriver
 
 # Install PyTorch and related packages
-RUN pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+RUN pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 
 # Set up working directory and copy application code
 COPY . /app
@@ -55,7 +55,7 @@ WORKDIR /app
 # Install Python package (assuming it has a setup.py)
 RUN pip3 install --no-cache-dir -e .
 
-RUN pip install transformers==4.41.2
+RUN pip install transformers==4.50.3
 
 # Set environment variables
 ENV CHROME_BIN=/usr/bin/google-chrome \

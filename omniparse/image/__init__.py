@@ -1,20 +1,17 @@
 """
 Title: OmniPrase
 Author: Adithya S Kolavi
-Date: 2024-07-02
+Date: 2025-05-23
 
-This code includes portions of code from the marker repository by VikParuchuri.
-Original repository: https://github.com/VikParuchuri/marker
+This code includes portions of code from the Docling repository.
+Original repository: https://github.com/docling-project/docling
 
-Original Author: VikParuchuri
-Original Date: 2024-01-15
-
-License: GNU General Public License (GPL) Version 3
-URL: https://github.com/VikParuchuri/marker/blob/master/LICENSE
+License: MIT
+URL: https://github.com/docling-project/docling/blob/main/LICENSE
 
 Description:
-This section of the code was adapted from the marker repository to enhance text image parsing.
-All credits for the original implementation go to VikParuchuri.
+This section of the code was adapted from the Docling repository to enhance text pdf/word/ppt parsing.
+All credits for the original implementation go to Docling.
 """
 
 """
@@ -38,15 +35,14 @@ import os
 import tempfile
 import img2pdf
 from PIL import Image
+from pathlib import Path
 
-# from omniparse.document.parse import parse_single_image
-from marker.convert import convert_single_pdf
 from omniparse.image.process import process_image_task
 from omniparse.utils import encode_images
 from omniparse.models import responseDocument
 
 
-def parse_image(input_data, model_state) -> dict:
+def parse_image(image_name, input_data, model_state) -> dict:
     temp_files = []
 
     try:
@@ -87,13 +83,20 @@ def parse_image(input_data, model_state) -> dict:
                 temp_pdf_path = temp_pdf_file.name
                 temp_files.append(temp_pdf_path)
 
-        # Parse the PDF file
-        full_text, images, out_meta = convert_single_pdf(
-            temp_pdf_path, model_state.model_list
-        )
+        docling_result = model_state.docling_converter.convert(Path(temp_pdf_path))
+        full_text = docling_result.document.export_to_markdown()
+
+        out_meta = {
+            "filename": image_name,
+            "filetype": image.format.lower() if image.format else "image",
+            "block_stats": {
+                "images": len(docling_result.document.pictures),
+                "tables": len(docling_result.document.tables),
+            },
+        }
 
         parse_image_result = responseDocument(text=full_text, metadata=out_meta)
-        encode_images(images, parse_image_result)
+        encode_images(image_name, docling_result.document, parse_image_result)
 
         return parse_image_result
 

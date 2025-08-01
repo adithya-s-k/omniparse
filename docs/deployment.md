@@ -29,15 +29,3 @@ docker run --gpus all -p 8000:8000 omniparse
 docker run -p 8000:8000 omniparse
 
 ```
-
-## ✈️ Skypilot(coming soon)
-
-SkyPilot is a framework for running LLMs, AI, and batch jobs on any cloud, offering maximum cost savings, highest GPU availability, and managed execution. To deploy Marker API using Skypilot on any cloud provider, execute the following command:
-
-```bash
-pip install skypilot-nightly[all]
-
-# setup skypilot with the cloud provider our your
-
-sky launch skypilot.yaml
-```

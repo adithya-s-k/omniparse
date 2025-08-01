@@ -105,7 +105,7 @@ Run the Server:
 python server.py --host 0.0.0.0 --port 8000 --documents --media --web
 ```
 
-* `--documents`: Load in all the models that help you parse and ingest documents (Surya OCR series of models and Florence-2).
+* `--documents`: Load in all the models that help you parse and ingest documents (Docling models and Florence-2).
 * `--media`: Load in Whisper model to transcribe audio and video files.
 * `--web`: Set up selenium crawler.
 
@@ -287,7 +287,6 @@ Arguments:
 🛠️ One magic API: just feed in your file prompt what you want, and we will take care of the rest\
 🔧 Dynamic model selection and support for external APIs\
 📄 Batch processing for handling multiple files at once\
-📦 New open-source model to replace Surya OCR and Marker
 
 **Final goal**: replace all the different models currently being used with a single MultiModel Model to parse any type of data and get the data you need.
 
@@ -297,13 +296,13 @@ OmniParse is licensed under the GPL-3.0 license. See `LICENSE` for more informat
 
 ### Acknowledgements
 
-This project builds upon the remarkable [Marker](https://github.com/VikParuchuri/marker) project created by [Vik Paruchuri](https://twitter.com/VikParuchuri). We express our gratitude for the inspiration and foundation provided by this project. Special thanks to [Surya-OCR](https://github.com/VikParuchuri/surya) and [Texify](https://github.com/VikParuchuri/texify) for the OCR models extensively used in this project, and to [Crawl4AI](https://github.com/unclecode/crawl4ai) for their contributions.
+This project builds upon the remarkable [Docling](https://github.com/docling-project/docling) project. We express our gratitude for the inspiration and foundation provided by this project. Special thanks to [Crawl4AI](https://github.com/unclecode/crawl4ai) for their contributions.
 
 Models being used:
 
-* Surya OCR, Detect, Layout, Order, and Texify
-* Florence-2 base
-* Whisper Small
+- Docling IBM models
+- Florence-2 base
+- Whisper Small
 
 Thank you to the authors for their contributions to these models.
 

@@ -1,36 +1,32 @@
 """
 Title: OmniPrase
 Author: Adithya S Kolavi
-Date: 2024-07-02
+Date: 2025-05-23
 
-This code includes portions of code from the marker repository by VikParuchuri.
-Original repository: https://github.com/VikParuchuri/marker
+This code includes portions of code from the Docling repository.
+Original repository: https://github.com/docling-project/docling
 
-Original Author: VikParuchuri
-Original Date: 2024-01-15
-
-License: GNU General Public License (GPL) Version 3
-URL: https://github.com/VikParuchuri/marker/blob/master/LICENSE
+License: MIT
+URL: https://github.com/docling-project/docling/blob/main/LICENSE
 
 Description:
-This section of the code was adapted from the marker repository to enhance text pdf/word/ppt parsing.
-All credits for the original implementation go to VikParuchuri.
+This section of the code was adapted from the Docling repository to enhance text pdf/word/ppt parsing.
+All credits for the original implementation go to Docling.
 """
 
 import os
 import tempfile
 import subprocess
+from io import BytesIO
+from pathlib import Path
 
-# from omniparse.documents.parse import parse_single_pdf
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from fastapi.responses import JSONResponse
 from omniparse import get_shared_state
 
-# from omniparse.documents import parse_pdf , parse_ppt , parse_doc
-# from omniparse.documents import parse_pdf
-from marker.convert import convert_single_pdf
 from omniparse.utils import encode_images
 from omniparse.models import responseDocument
+from docling.datamodel.base_models import DocumentStream
 
 document_router = APIRouter()
 model_state = get_shared_state()
@@ -41,13 +37,20 @@ model_state = get_shared_state()
 async def parse_pdf_endpoint(file: UploadFile = File(...)):
     try:
         file_bytes = await file.read()
-        full_text, images, out_meta = convert_single_pdf(
-            file_bytes, model_state.model_list
-        )
+        source = DocumentStream(name=file.filename, stream=BytesIO(file_bytes))
+        filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+        out_meta = {"filename": file.filename, "filetype": filetype}
+
+        docling_result = model_state.docling_converter.convert(source)
+        full_text = docling_result.document.export_to_markdown()
+
+        out_meta["block_stats"] = {
+            "images": len(docling_result.document.pictures),
+            "tables": len(docling_result.document.tables),
+        }
 
         result = responseDocument(text=full_text, metadata=out_meta)
-        encode_images(images, result)
-        # result : responseDocument = convert_single_pdf(file_bytes , model_state.model_list)
+        encode_images(file.filename, docling_result.document, result)
 
         return JSONResponse(content=result.model_dump())
 
@@ -82,14 +85,24 @@ async def parse_ppt_endpoint(file: UploadFile = File(...)):
     with open(output_pdf_path, "rb") as pdf_file:
         pdf_bytes = pdf_file.read()
 
-    full_text, images, out_meta = convert_single_pdf(pdf_bytes, model_state.model_list)
+    source = DocumentStream(name=file.filename, stream=BytesIO(pdf_bytes))
+    filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+    out_meta = {"filename": file.filename, "filetype": filetype}
+
+    docling_result = model_state.docling_converter.convert(source)
+    full_text = docling_result.document.export_to_markdown()
+
+    out_meta["block_stats"] = {
+        "images": len(docling_result.document.pictures),
+        "tables": len(docling_result.document.tables),
+    }
 
     os.remove(input_path)
     os.remove(output_pdf_path)
     os.rmdir(output_dir)
 
     result = responseDocument(text=full_text, metadata=out_meta)
-    encode_images(images, result)
+    encode_images(file.filename, docling_result.document, result)
 
     return JSONResponse(content=result.model_dump())
 
@@ -120,10 +133,20 @@ async def parse_doc_endpoint(file: UploadFile = File(...)):
     with open(output_pdf_path, "rb") as pdf_file:
         pdf_bytes = pdf_file.read()
 
-    full_text, images, out_meta = convert_single_pdf(pdf_bytes, model_state.model_list)
+    source = DocumentStream(name=file.filename, stream=BytesIO(pdf_bytes))
+    filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+    out_meta = {"filename": file.filename, "filetype": filetype}
+
+    docling_result = model_state.docling_converter.convert(source)
+    full_text = docling_result.document.export_to_markdown()
+
+    out_meta["block_stats"] = {
+        "images": len(docling_result.document.pictures),
+        "tables": len(docling_result.document.tables),
+    }
 
     result = responseDocument(text=full_text, metadata=out_meta)
-    encode_images(images, result)
+    encode_images(file.filename, docling_result.document, result)
 
     return JSONResponse(content=result.model_dump())
 
@@ -163,36 +186,22 @@ async def parse_any_endpoint(file: UploadFile = File(...)):
         )
         input_path = output_pdf_path
 
-    # Common parsing logic
-    full_text, images, out_meta = convert_single_pdf(input_path, model_state.model_list)
+    docling_result = model_state.docling_converter.convert(Path(input_path))
+    full_text = docling_result.document.export_to_markdown()
+
+    filetype = os.path.splitext(file.filename)[1].lstrip('.').upper()
+    out_meta = {
+        "filename": file.filename,
+        "filetype": filetype,
+        "block_stats": {
+            "images": len(docling_result.document.pictures),
+            "tables": len(docling_result.document.tables),
+        },
+    }
 
     os.remove(input_path)
 
     result = responseDocument(text=full_text, metadata=out_meta)
-    encode_images(images, result)
+    encode_images(file.filename, docling_result.document, result)
 
     return JSONResponse(content=result.model_dump())
-
-
-# @document_router.post("/docs")
-# async def parse_docs_endpoint(file: UploadFile = File(...)):
-#     try:
-
-#         file_bytes = await file.read()
-#         result = parse_doc(file_bytes , model_state)
-
-#         return JSONResponse(content=result)
-
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-
-# @document_router.post("/ppt")
-# async def parse_ppt_endpoint(file: UploadFile = File(...)):
-#     try:
-#         file_bytes = await file.read()
-#         result = parse_ppt(file_bytes , model_state)
-
-#         return JSONResponse(content=result)
-
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
