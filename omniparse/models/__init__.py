@@ -56,7 +56,9 @@ class responseDocument(BaseModel):
         return img_base64
 
     def image_processor(self, image_processor: Callable[[str], str]):
-        for img in self.image:
+        for img in self.images:
+            if img.image_info is None:
+                img.image_info = {}
             if not img.image_info.get("caption"):  # Only generate caption if it's empty
                 img.image_info["caption"] = image_processor(img.image_name)
 
